@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-    import { roleStore } from "./role/store";
+	import { RoleStore } from "./store";
 
-	//$: filteredHistory = $page.data.history
+	const { historyEntries } = $page.data;
 </script>
 
 <div class="flex justify-center align-center p-5 pt-10">
@@ -20,8 +20,8 @@
 				<div class="drawer-side">
 					<label for="my-drawer" class="drawer-overlay" />
 					<ul class="menu p-4 w-80 bg-base-100 text-base-content">
-						{#each [] as history}
-							<li><button on:click={() => {roleStore.set(history)}}>{history}</button></li>
+						{#each historyEntries as history}
+							<li><button on:click={() => {RoleStore.set(history.roleForm)}}>{history.roleForm.role}</button></li>
 						{/each}
 					</ul>
 				</div>
@@ -29,6 +29,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-</style>

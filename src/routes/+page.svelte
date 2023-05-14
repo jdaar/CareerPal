@@ -2,8 +2,8 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>JobSearch</title>
+	<meta name="description" content="An app made for job data scraping and analysis" />
 </svelte:head>
 
 <section>

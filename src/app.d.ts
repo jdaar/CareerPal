@@ -5,7 +5,6 @@ import type { JobScraperQueue } from "$lib/scraper/scraper";
 // for information about these interfaces
 declare global {
 	namespace App {
-		/*
 		interface Error {
 			message: string,
 			errorId: string
@@ -13,7 +12,6 @@ declare global {
 		interface Locals { 
 			JobScraperQueue: JobScraperQueue
 		}
-		*/
 		// interface PageData {}
 		// interface Platform {}
 	}

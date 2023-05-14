@@ -1,39 +1,20 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { writable } from 'svelte/store';
-    import {roleStore} from './store';
-	import type { RoleFormData, RolePlatform } from './store';
- /*
+    import { RoleStore } from '../store';
 
 	let { cachedFormData, availablePlatforms } = $page.data;
 
-    roleStore.set(cachedFormData);
+    RoleStore.set(cachedFormData);
 
-    let formData: RoleFormData;
+    console.log(cachedFormData);
 
-    $: formData = $roleStore;
-    
-    selectedPlatform.subscribe(value => {
-        roleStore.set({...$roleStore, platform: value})
-    })
-    selectedRole.subscribe(value => {
-        roleStore.set({...$roleStore, role: value})
-    })
-    selectedTags.subscribe(value => {
-        roleStore.set({...$roleStore, tags: value})
-    })
+    let tagSearchInput = writable<string>("");
 
-    roleStore.subscribe(value => {
-        selectedRole.set(value.role);
-        selectedPlatform.set(value.platform);
-        selectedTags.set(value.tags);
-    })
-    */
-	let availablePlatforms  = ['Test'];
-    const selectedPlatform = writable<RolePlatform>("computrabajo");
-    const selectedRole = writable<string>("");
-    const selectedTagSearch = writable<string>("");
-    const selectedTags = writable<string[]>([]);
+    $: console.log($RoleStore.role);
+    $: console.log($RoleStore.tags);
+    $: console.log($RoleStore.platform);
+    $: console.log($tagSearchInput);
 </script>
 
 <div class="flex justify-between pl-8 pt-5 pb-0 pr-8 align-center">
@@ -54,7 +35,7 @@
                     placeholder="Desarrollador web"
                     name="role"
                     class="input w-full input-bordered"
-                    bind:value={$selectedRole}
+                    bind:value={$RoleStore.role}
                 />
             </label>
         </div>
@@ -95,8 +76,12 @@
                 </div>
             </div>
             <label class="input-group input-group-lg">
-                <input type="text" placeholder="Search…" class="input w-full input-bordered" id="tag-search" />
-                <button class="btn btn-square">
+                <input type="text" placeholder="Search…" class="input w-full input-bordered" id="tag-search" bind:value={$tagSearchInput} />
+                <button class="btn btn-square" on:click={(event) => {
+                    event.preventDefault();
+                    $RoleStore.tags = [...$RoleStore.tags, $tagSearchInput];
+                    $tagSearchInput = "";
+                }}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-6 w-6"
@@ -114,14 +99,13 @@
             </label>
         </div>
         <div class="form-control pt-2 pb-2">
-            <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label class="label">
+            <label class="label" for="platform">
                 <span class="label-text">Plataformas de busqueda</span>
             </label>
-            <label class="input-group input-group-lg">
+            <label class="input-group input-group-lg" id="platform">
                 <div class="btn-group flex-col w-full lg:flex-row">
                     {#each availablePlatforms as platform}
-                        <input type="radio" data-title="{platform}" class="btn" name="platform" value={platform} bind:group={$selectedPlatform}>
+                        <input type="radio" data-title="{platform}" class="btn" name="platform" value={platform} bind:group={$RoleStore.platform}/>
                     {/each}
                 </div>
             </label>
