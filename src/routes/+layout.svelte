@@ -1,5 +1,6 @@
 <script>
 	import './styles.css';
+
 </script>
 
 <div class="navbar bg-base-100 p-5">
