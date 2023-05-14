@@ -1,14 +1,7 @@
-import type { JobInfo } from "./platform";
-
-export type History = {
-  date_iso: string;
-  value: string;
-  type: 'role' | 'parameters';
-}
+import type { TJobInfo } from "./platform";
 
 type TablesWithKey = {
-  History: Table<History>,
-  JobInfo: Table<JobInfo>
+  JobInfo: Table<TJobInfo>
 }
 
 /**
@@ -43,5 +36,7 @@ export type Table<T> = {
 
 export type Datasource = {
   name: string;
+  connect: (connection_string: string) => void;
+  ensureCreated: () => void;
   tables: TablesWithKey
 };

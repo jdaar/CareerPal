@@ -1,7 +1,7 @@
 import type {
   GetJobInfoCallback,
   GetJobLinksCallback,
-  JobInfo,
+  TJobInfo,
   Platform,
 } from "../lib/platform";
 import { pages } from "../lib/arguments";
@@ -49,7 +49,7 @@ export const getJobInfo: GetJobInfoCallback = async (urlPP) => {
   await urlPP.page.goto(urlPP.data);
   log("info", "main", `Getting info for job ${urlPP.data}...`);
 
-  const jobInfo: JobInfo = {
+  const jobInfo: TJobInfo = {
     title: await getTextByXPath(urlPP.page, "/html/body/main/div[1]/h1"),
     subtitle: await getTextByXPath(urlPP.page, "/html/body/main/div[1]/p"),
     tags: await getMultipleTextByXPath(

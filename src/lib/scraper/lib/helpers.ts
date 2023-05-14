@@ -13,6 +13,19 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 /**
+ * Generates a guid
+ * @since 1.1.0
+ * @see http://slavik.meltser.info/the-efficient-way-to-create-guid-uuid-in-javascript-with-explanation/
+ */
+export function GenerateGuid() {  
+   function _p8(s: boolean) {  
+      const p = (Math.random().toString(16)+"000000000").substring(2,8);  
+      return s ? "-" + p.substring(0,4) + "-" + p.substring(4,4) : p ;  
+   }  
+   return _p8(false) + _p8(true) + _p8(true) + _p8(false);  
+}  
+
+/**
  * Get the text for the first element that matches a given xpath.
  * @param page - The page to use.
  * @param url - The url to navigate to.

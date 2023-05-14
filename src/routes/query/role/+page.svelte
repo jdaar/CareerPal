@@ -3,6 +3,7 @@
 	import { writable } from 'svelte/store';
     import {roleStore} from './store';
 	import type { RoleFormData, RolePlatform } from './store';
+ /*
 
 	let { cachedFormData, availablePlatforms } = $page.data;
 
@@ -10,10 +11,6 @@
 
     let formData: RoleFormData;
 
-    const selectedPlatform = writable<RolePlatform>(cachedFormData.platform);
-    const selectedRole = writable<string>(cachedFormData.role);
-    const selectedTagSearch = writable<string>("");
-    const selectedTags = writable<string[]>([]);
     $: formData = $roleStore;
     
     selectedPlatform.subscribe(value => {
@@ -31,6 +28,12 @@
         selectedPlatform.set(value.platform);
         selectedTags.set(value.tags);
     })
+    */
+	let availablePlatforms  = ['Test'];
+    const selectedPlatform = writable<RolePlatform>("computrabajo");
+    const selectedRole = writable<string>("");
+    const selectedTagSearch = writable<string>("");
+    const selectedTags = writable<string[]>([]);
 </script>
 
 <div class="flex justify-between pl-8 pt-5 pb-0 pr-8 align-center">

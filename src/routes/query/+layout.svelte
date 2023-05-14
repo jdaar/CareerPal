@@ -2,7 +2,7 @@
 	import { page } from "$app/stores";
     import { roleStore } from "./role/store";
 
-	$: filteredHistory = $page.data.history
+	//$: filteredHistory = $page.data.history
 </script>
 
 <div class="flex justify-center align-center p-5 pt-10">
@@ -20,8 +20,8 @@
 				<div class="drawer-side">
 					<label for="my-drawer" class="drawer-overlay" />
 					<ul class="menu p-4 w-80 bg-base-100 text-base-content">
-						{#each filteredHistory as history}
-							<li><button on:click={() => {roleStore.set(history.value)}}>{history.value}</button></li>
+						{#each [] as history}
+							<li><button on:click={() => {roleStore.set(history)}}>{history}</button></li>
 						{/each}
 					</ul>
 				</div>

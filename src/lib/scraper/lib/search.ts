@@ -20,7 +20,7 @@ const memoizedClosestTechnologyName = new Map<string, string>();
 export function findClosestTechnologyName(input: string): string | null {
   if (memoizedClosestTechnologyName.has(input.toLowerCase())) {
     log("debug", "findClosestTechnologyName", `Found ${input} in memoized map`);
-    return memoizedClosestTechnologyName.get(input.toLowerCase())!;
+    return memoizedClosestTechnologyName.get(input.toLowerCase()) ?? null;
   }
   if (EXCLUDED_TOKENS.includes(input.toLowerCase())) {
     return null;

@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  db:
+    image: mongo
+    ports:
+      - "27017:27017"
+  scraper:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - openai_api_key
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      

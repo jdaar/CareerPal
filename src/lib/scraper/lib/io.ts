@@ -11,7 +11,7 @@ import { verbose } from "./arguments";
  * @since 1.0.0
  */
 export async function objectsToCsv(
-  objects: Record<string, any>[],
+  objects: Record<string, string | string[]>[],
   filePath: string
 ): Promise<void> {
   log(
