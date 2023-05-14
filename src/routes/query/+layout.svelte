@@ -1,8 +1,14 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-	import { RoleStore } from "./store";
+	import { RoleStore, type THistoryEntry } from "./store";
 
-	const { historyEntries } = $page.data;
+	let historyEntries: Array<THistoryEntry> = $page.data.historyEntries;
+
+	let historySelectCallback = (history: THistoryEntry) => {
+		if (history.type === 'role'){
+			RoleStore.set(history.data);
+		}
+	}
 </script>
 
 <div class="flex justify-center align-center p-5 pt-10">
@@ -21,7 +27,9 @@
 					<label for="my-drawer" class="drawer-overlay" />
 					<ul class="menu p-4 w-80 bg-base-100 text-base-content">
 						{#each historyEntries as history}
-							<li><button on:click={() => {RoleStore.set(history.roleForm)}}>{history.roleForm.role}</button></li>
+							{#if history.type === 'role'}
+								<li><button on:click={() => historySelectCallback(history)}>{history.data.role}</button></li>
+							{/if}
 						{/each}
 					</ul>
 				</div>

@@ -1,21 +1,10 @@
 import type { LayoutServerLoad } from './$types';
 import type { THistoryEntry } from './store';
 
-export const load = (async (event) => {
-	const historyEntries: THistoryEntry[] = [
-		{
-			roleForm: {
-				platform: 'computrabajo',
-				role: 'test',
-				tags: ['Test']
-			},
-			parameterForm: {
-				maxResults: 10
-			}
-		}
-	];
+export const load = (async ({ cookies }) => {
+	const cachedHistoryEntries: {data: Array<THistoryEntry>} = JSON.parse(cookies.get('cachedHistoryEntries') ?? '{"data": []}');
 
 	return {
-		historyEntries
+		historyEntries: cachedHistoryEntries.data
 	 };
 }) satisfies LayoutServerLoad;

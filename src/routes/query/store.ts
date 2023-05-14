@@ -4,10 +4,18 @@ export const AvailablePlatforms = ['computrabajo', 'indeed', 'linkedin'] as cons
 
 export type TRolePlatform = typeof AvailablePlatforms[number];
 
-export type THistoryEntry = {
-    roleForm: TRoleFormData,
-    parameterForm: TParameterFormData
+type TRoleHistoryEntry = {
+    type: "role",
+    data: TRoleFormData
 }
+
+type TParameterHistoryEntry = {
+    type: "parameter",
+    data: TParameterFormData
+}
+
+export type THistoryEntry = TRoleHistoryEntry | TParameterHistoryEntry;
+
 
 export type TRoleFormData = {
 	role: string;
