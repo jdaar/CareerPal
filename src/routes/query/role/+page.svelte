@@ -8,11 +8,7 @@
 
 	let { cachedFormData, availablePlatforms } = $page.data;
 
-    RoleStore.set({
-        platform: 'computrabajo',
-        role: '',
-        ...cachedFormData,
-    });
+    RoleStore.set(cachedFormData);
 
     let tagSearchInput = writable<string>("");
 

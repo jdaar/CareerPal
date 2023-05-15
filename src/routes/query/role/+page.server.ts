@@ -8,7 +8,7 @@ export const load = (async ({ cookies }) => {
 		platform: 'computrabajo',
 		role: '',
 		tags: [],
-		...cachedFormData
+		...cachedFormData.data
 	}
 
 	return {
