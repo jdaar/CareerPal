@@ -3,6 +3,7 @@ import type { TJobInfo, Platform, TJobScraperParameters } from "./lib/platform";
 import { datasource, role } from "./lib/arguments";
 import { log } from "./lib/io";
 
+import Computrabajo from "./platforms/computrabajo";
 import MongoDb from "./datasources/mongodb";
 import type { Datasource } from "./lib/datasource";
 import { GenerateGuid } from "./lib/helpers";
@@ -89,9 +90,9 @@ export class JobScraperQueue {
    * @param scraper Scraper to add
    * @since 1.1.0
    */
-  public async Add(scraper: JobScraper) {
-    await scraper.SetDatasource(this.parameters.connection_string);
+  public Add(scraper: JobScraper) {
     this.queue.push(WrapJobScraperWithMetadata(scraper));
+    this.empty = false;
   }
 
   /**
@@ -99,7 +100,8 @@ export class JobScraperQueue {
    * @since 1.1.0
    */
   public async ExecuteBatch() {
-    if (!this.empty) throw newScrapingError("Queue should not be empty")
+    console.log(this)
+    if (this.empty) throw newScrapingError("Queue should not be empty")
     
     for (let i = 0; i < this.parameters.batch_size; i++) {
       await this.executeHead();
@@ -112,6 +114,7 @@ export class JobScraperQueue {
    */
   private async executeHead() {
     await this.queue[0].scraper.SetDatasource(this.parameters.connection_string);
+    await this.queue[0].scraper.RegisterPlatform(Computrabajo);
     await this.queue[0].scraper.Init();
     this.empty = false;
   }
@@ -147,7 +150,7 @@ export class JobScraperQueue {
  * @since 1.0.0
  */
 export class JobScraper {
-  private static platforms: Platform[] = [];
+  private platforms: Platform[] = [];
   private browser: puppeteer.Browser | null;
   private jobsLinks: Map<string, string[]>;
   private jobsInfo: Map<string, TJobInfo[]>;
@@ -166,15 +169,15 @@ export class JobScraper {
 
   public async Init() {
     this.browser = await puppeteer.launch({
-      executablePath: "/usr/bin/chromium",
+      //executablePath: "/usr/bin/chromium",
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       headless: false,
     });
     this.run();
   }
 
-  public static RegisterPlatform(platform: Platform) {
-    JobScraper.platforms.push(platform);
+  public RegisterPlatform(platform: Platform) {
+    this.platforms.push(platform);
   }
 
   public RegisterExecutionCallback(exec_cb: () => void) {
@@ -182,7 +185,7 @@ export class JobScraper {
   }
 
   private async getJobLinks() {
-    for (const platform of JobScraper.platforms) {
+    for (const platform of this.platforms) {
       if (!this.browser) {
         throw new Error("Browser not found.");
       }
@@ -212,7 +215,7 @@ export class JobScraper {
         throw new Error("Jobs links not found.");
       }
 
-      const platform = JobScraper.platforms.find((p) => p.name === _platform);
+      const platform = this.platforms.find((p) => p.name === _platform);
       const page = await this.browser.newPage();
 
       if (!platform) {
@@ -262,7 +265,6 @@ export class JobScraper {
     }
     await this.getJobLinks();
     await this.getJobInfo();
-    await this.browser.close();
     await this.executionCallback();
   }
 }

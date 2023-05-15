@@ -14,7 +14,7 @@ import {
 } from "../lib/helpers";
 import { getTechnologies } from "../lib/search";
 
-const WAIT_TIME = 0;
+const WAIT_TIME = 5000;
 
 export const getJobLinks: GetJobLinksCallback = async (urlPP) => {
   log("info", "getJobLinks", `Getting job links for role...`);
@@ -54,11 +54,11 @@ export const getJobInfo: GetJobInfoCallback = async (urlPP) => {
     subtitle: await getTextByXPath(urlPP.page, "/html/body/main/div[1]/p"),
     tags: await getMultipleTextByXPath(
       urlPP.page,
-      "/html/body/main/div[2]/div/div[2]/div[2]/div[1]/span"
+      "/html/body/main/div[2]/div/div[2]/div[3]/div[1]/span"
     ),
     requirements: await getListItemsByXPath(
       urlPP.page,
-      "/html/body/main/div[2]/div/div[2]/div[2]/ul"
+      "/html/body/main/div[2]/div/div[2]/div[3]/ul"
     ),
     company: (await getTextByXPath(urlPP.page, "/html/body/main/div[1]/p"))
       .split("-")[0]
@@ -69,19 +69,19 @@ export const getJobInfo: GetJobInfoCallback = async (urlPP) => {
     salary: (
       await getMultipleTextByXPath(
         urlPP.page,
-        "/html/body/main/div[2]/div/div[2]/div[2]/div[1]/span"
+        "/html/body/main/div[2]/div/div[2]/div[3]/div[1]/span"
       )
     ).filter((tag) => tag.includes("$"))[0],
     experience: (
       await getListItemsByXPath(
         urlPP.page,
-        "/html/body/main/div[2]/div/div[2]/div[2]/ul"
+        "/html/body/main/div[2]/div/div[2]/div[3]/ul"
       )
     ).filter((tag) => tag.includes("experiencia"))[0],
     technologies: await getTechnologies(
       await getTextByXPath(
         urlPP.page,
-        "/html/body/main/div[2]/div/div[2]/div[2]/p[1]"
+        "/html/body/main/div[2]/div/div[2]/div[3]/p[1]"
       )
     ),
     url: urlPP.data,

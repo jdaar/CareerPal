@@ -26,7 +26,7 @@ export const actions = {
             role: cachedRoleFormData.data.role
         })
 
-        await locals.JobScraperQueue.Add(jobScraper);
+        locals.JobScraperQueue.Add(jobScraper);
         await locals.JobScraperQueue.ExecuteBatch();
 	},
 } satisfies Actions;
