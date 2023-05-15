@@ -24,7 +24,8 @@ export type TRoleFormData = {
 }
 
 export type TParameterFormData = {
-    maxResults: number;
+    connection_string: string;
+    pages: number;
 }
 
 export const RoleStore = writable<TRoleFormData>({
@@ -34,5 +35,6 @@ export const RoleStore = writable<TRoleFormData>({
 });
 
 export const ParameterStore = writable<TParameterFormData>({
-    maxResults: 100
+    connection_string: '',
+    pages: 1,
 });

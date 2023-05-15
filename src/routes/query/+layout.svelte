@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-	import { RoleStore, type THistoryEntry } from "./store";
+	import { ParameterStore, RoleStore, type THistoryEntry } from "./store";
 
 	let historyEntries: Array<THistoryEntry> = $page.data.historyEntries;
 
 	let historySelectCallback = (history: THistoryEntry) => {
-		if (history.type === 'role'){
-			RoleStore.set(history.data);
-		}
+		if (history.type === 'role') RoleStore.set(history.data);
+		if (history.type === 'parameter') ParameterStore.set(history.data);
 	}
 </script>
 
@@ -25,10 +24,13 @@
                 </div>
 				<div class="drawer-side">
 					<label for="my-drawer" class="drawer-overlay" />
-					<ul class="menu p-4 w-80 bg-base-100 text-base-content">
+					<ul class="menu p-4 w-80 bg-base-100 text-base-content max-h-fit">
 						{#each historyEntries as history}
-							{#if history.type === 'role'}
+							{#if history.type === 'role' && $page.url.pathname=='/query/role'}
 								<li><button on:click|preventDefault={() => historySelectCallback(history)}>{history.data.role}</button></li>
+							{/if}
+							{#if history.type === 'parameter' && $page.url.pathname=='/query/parameters'}
+								<li><button on:click|preventDefault={() => historySelectCallback(history)}>{`En ${history.data.connection_string} con un maximo de ${history.data.pages} paginas`}</button></li>
 							{/if}
 						{/each}
 					</ul>

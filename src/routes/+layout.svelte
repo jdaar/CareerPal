@@ -1,6 +1,7 @@
 <script>
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import './styles.css';
-
 </script>
 
 <div class="navbar bg-base-100 p-5">
@@ -15,7 +16,9 @@
 		</ul>
 	</div>
 	<div class="navbar-end">
-		<button class="btn btn-primary">Ejecutar</button>
+		{#if $page.url.pathname !== '/query/execute'}
+			<button class="btn btn-primary" on:click={() => goto('/query/execute')}>Ejecutar</button>
+		{/if}
 	</div>
 </div>
 <div class="app">
