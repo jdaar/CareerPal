@@ -18,4 +18,8 @@
     <h2 class="font-bold text-center leading-10 text-2xl">Se ejecutara con la siguiente informacion</h2>
     <p>{cachedParameterFormData.connection_string}</p>
     <p>{cachedParameterFormData.pages}</p>
+
+    <form method="POST" action="?/execute">
+        <button type="submit">Post</button>
+    </form>
 </div> 

@@ -73,12 +73,9 @@ export class JobScraperQueue {
 
   private static instance: JobScraperQueue | null = null
 
-  public static GetInstance(): JobScraperQueue {
+  public static GetInstance(parameters: TJobScraperQueueParameters): JobScraperQueue {
     if (JobScraperQueue.instance === null) {
-      JobScraperQueue.instance = new JobScraperQueue({
-        batch_size: 1,
-        connection_string: 'mongodb://localhost:27017/job-search'
-      })
+      JobScraperQueue.instance = new JobScraperQueue(parameters)
     }
     return JobScraperQueue.instance;
   }
@@ -114,6 +111,7 @@ export class JobScraperQueue {
    * @since 1.1.0
    */
   private async executeHead() {
+    await this.queue[0].scraper.SetDatasource(this.parameters.connection_string);
     await this.queue[0].scraper.Init();
     this.empty = false;
   }
