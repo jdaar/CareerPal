@@ -16,7 +16,7 @@ function GetDatasource(conn_str: string) {
 }
 
 export const handle = (async ({ event, resolve }) => {
-    const connectionStr = 'mongodb://localhost:27017/job-search';
+    const connectionStr = 'mongodb://localhost:27017/job';
 
     if (event.locals.Datasource === null || event.locals.Datasource === undefined) {
       event.locals.Datasource = GetDatasource(connectionStr);

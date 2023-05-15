@@ -1,4 +1,4 @@
-import type { GetRowsCallback, PostRowCallback, Table, TablesWithKey } from "../lib/datasource";
+import type { GetMetricsCallback, GetRowsCallback, PostRowCallback, Table, TablesWithKey } from "../lib/datasource";
 import type { TJobInfo } from "../lib/platform";
 import mongoose, { Schema, model, connect, Connection, Model } from "mongoose";
 import { log } from "../lib/io";
@@ -35,15 +35,8 @@ class JobInfoTable implements Table<TJobInfo> {
     this.Created = true;
   };
 
-  public GetRows: GetRowsCallback<TJobInfo> = async (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _filter = (job) => true 
-  ) => {
-    if (this.jobInfoModel == null) throw new Error('Model should not be null');
-    const documents = await this.jobInfoModel.find();
-    console.log(documents)
-    /*
-    const words = documents
+  public GetMetrics: GetMetricsCallback<TJobInfo> = async (rows) => {
+    const words = rows 
       .filter(
         (document, index, array) =>
           array.findIndex((_document) => document.url === _document.url) === index
@@ -60,7 +53,7 @@ class JobInfoTable implements Table<TJobInfo> {
         return acc;
       }, new Map<string, number>());
     
-    const salaries = documents
+    const salaries = rows 
       .filter(
         (document, index, array) =>
           array.findIndex((_document) => document.url === _document.url) === index
@@ -72,11 +65,20 @@ class JobInfoTable implements Table<TJobInfo> {
       .replace(/\./g, '').replace(',00', ''))
     ).filter((salary) => salary > 0);
 
-    console.log(processedSalaries)
-    console.log('StdDev: ', standardDeviation(processedSalaries));
-    console.log('Mean: ', mean(processedSalaries));
-    console.log(JSON.stringify(Object.fromEntries(words)));
-    */
+    return {
+      salaries: processedSalaries,
+      std_dev: standardDeviation(processedSalaries),
+      mean: mean(processedSalaries),
+      technologies: Object.fromEntries(words)
+    }
+  }
+
+  public GetRows: GetRowsCallback<TJobInfo> = async (
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _filter = (job) => true 
+  ) => {
+    if (this.jobInfoModel == null) throw new Error('Model should not be null');
+    const documents = await this.jobInfoModel.find();
     return documents;
   }
 

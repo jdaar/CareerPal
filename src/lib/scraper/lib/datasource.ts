@@ -32,11 +32,23 @@ export type PostRowCallback<T> = (row: T) => void;
  */
 export type GetRowsCallback<T> = (filter: (value: T) => boolean) => Promise<T[]>;
 
+export type TMetrics = {
+  salaries?: number[],
+  std_dev?: number,
+  mean?: number,
+  technologies?: {
+    [k: string]: number
+  },
+  average_technology_count?: number
+}
+
+export type GetMetricsCallback<T> = (rows: T[]) => Promise<TMetrics>;
 
 export abstract class Table<T> {
   public abstract Created: boolean;
   public abstract PostRow: PostRowCallback<T>;
   public abstract GetRows: GetRowsCallback<T>;
+  public abstract GetMetrics: GetMetricsCallback<T>;
   public abstract SetConnection: (conn: any) => void;
 
   public abstract Create: () => void;

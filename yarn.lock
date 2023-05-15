@@ -888,6 +888,11 @@
   resolved "https://registry.yarnpkg.com/@fontsource/fira-mono/-/fira-mono-4.5.10.tgz#443be4b2b4fc6e685b88431fcfdaf8d5f5639bbf"
   integrity sha512-bxUnRP8xptGRo8YXeY073DSpfK74XpSb0ZyRNpHV9WvLnJ7TwPOjZll8hTMin7zLC6iOp59pDZ8EQDj1gzgAQQ==
 
+"@fontsource/merriweather@^4.5.14":
+  version "4.5.14"
+  resolved "https://registry.yarnpkg.com/@fontsource/merriweather/-/merriweather-4.5.14.tgz#17b634fe3892e25f345954fe34df252730b96080"
+  integrity sha512-kDMIAokOvE9bYf+CDmEWzV3xtR8cRJlw/BipjhxqD9MIRZfU348cZ8xhHhmPXmxRiEjZLor4xxHXqps7eCvGQg==
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
@@ -924,6 +929,11 @@
   dependencies:
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
+
+"@kurkle/color@^0.3.0":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz#5acd38242e8bde4f9986e7913c8fdf49d3aa199f"
+  integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
 
 "@neoconfetti/svelte@^1.0.0":
   version "1.0.0"
@@ -1056,10 +1066,29 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.4.tgz#e913e8175db8307d78b4e8fa690408ba6b65dee4"
   integrity sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==
 
+"@types/chart.js@^2.9.37":
+  version "2.9.37"
+  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.9.37.tgz#8af70862b154fedf938b5b87debdb3a70f6e3208"
+  integrity sha512-9bosRfHhkXxKYfrw94EmyDQcdjMaQPkU1fH2tDxu8DWXxf1mjzWQAV4laJF51ZbC2ycYwNDvIm1rGez8Bug0vg==
+  dependencies:
+    moment "^2.10.2"
+
 "@types/cookie@^0.5.1":
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/@types/cookie/-/cookie-0.5.1.tgz#b29aa1f91a59f35e29ff8f7cb24faf1a3a750554"
   integrity sha512-COUnqfB2+ckwXXSFInsFdOAWQzCCx+a5hq2ruyj+Vjund94RJQd4LG2u9hnvJrTgunKAaax7ancBYlDrNYxA0g==
+
+"@types/d3-cloud@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@types/d3-cloud/-/d3-cloud-1.2.5.tgz#0300bedc826aacd505ae6c41c5f8c4ab75c45135"
+  integrity sha512-vEIER9DsEBUOdpRiwCh3n1qE+cV6h4e1LhxhY2sLt+m8LPNAIkOOhTlqk0JDiBwD+ZPM8ynFAOU3AuPuVYBFBA==
+  dependencies:
+    "@types/d3" "^3"
+
+"@types/d3@^3":
+  version "3.5.47"
+  resolved "https://registry.yarnpkg.com/@types/d3/-/d3-3.5.47.tgz#b81042fcb0195c583fc037bc857d161469a7d175"
+  integrity sha512-VkWIQoZXLFdcBGe5pdBKJmTU3fmpXvo/KV6ixvTzOMl1yJ2hbTXpfvsziag0kcaerPDwas2T0vxojwQG3YwivQ==
 
 "@types/estree@*", "@types/estree@^1.0.0":
   version "1.0.1"
@@ -1462,6 +1491,21 @@ chalk@^4.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+chart.js@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.3.0.tgz#ac363030ab3fec572850d2d872956f32a46326a1"
+  integrity sha512-ynG0E79xGfMaV2xAHdbhwiPLczxnNNnasrmPEXriXsPJGjmhOBYzFVEsB65w2qMDz+CaBJJuJD0inE/ab/h36g==
+  dependencies:
+    "@kurkle/color" "^0.3.0"
+
+chartjs-chart-wordcloud@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/chartjs-chart-wordcloud/-/chartjs-chart-wordcloud-4.2.0.tgz#c82e698121c341d3e4806c41963e3cc7fbb1b451"
+  integrity sha512-OlUecKzkRGcjzQF3WPlgbNPfF0bkMAk2vINFs/JF5UrzoDZ2oaSNFsfy6S5X4tZVG9yrIS51EbDWktwCi49T9g==
+  dependencies:
+    "@types/d3-cloud" "^1.2.5"
+    d3-cloud "^1.2.5"
+
 check-error@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
@@ -1594,6 +1638,18 @@ cssesc@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
+
+d3-cloud@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/d3-cloud/-/d3-cloud-1.2.5.tgz#3e91564f2d27fba47fcc7d812eb5081ea24c603d"
+  integrity sha512-4s2hXZgvs0CoUIw31oBAGrHt9Kt/7P9Ik5HIVzISFiWkD0Ga2VLAuO/emO/z1tYIpE7KG2smB4PhMPfFMJpahw==
+  dependencies:
+    d3-dispatch "^1.0.3"
+
+d3-dispatch@^1.0.3:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/d3-dispatch/-/d3-dispatch-1.0.6.tgz#00d37bcee4dd8cd97729dd893a0ac29caaba5d58"
+  integrity sha512-fVjoElzjhCEy+Hbn8KygnmMS7Or0a9sI2UzGwoB7cCtvI1XpVN9GpoYlnb3xt2YV66oXYb1fLJ8GMvP4hdU1RA==
 
 daisyui@^2.50.2:
   version "2.50.2"
@@ -2441,6 +2497,11 @@ mkdirp@^0.5.1:
   integrity sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==
   dependencies:
     minimist "^1.2.6"
+
+moment@^2.10.2:
+  version "2.29.4"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
 
 mongodb-connection-string-url@^2.5.4:
   version "2.6.0"
