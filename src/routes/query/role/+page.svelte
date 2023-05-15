@@ -16,6 +16,10 @@
 
     let tagSearchInput = writable<string>("");
 
+    const removeTag = (tag: string) => {
+        $RoleStore.tags = $RoleStore.tags.filter(v => v !== tag);
+    }
+
     const handleSubmit: svelte.JSX.EventHandler<Event, HTMLFormElement> = async (event) => {
         if (event.target instanceof HTMLFormElement) {
             const data = new FormData(event.target);
@@ -63,9 +67,10 @@
             <label class="label" for="tag-search">
                 <span class="label-text">Tecnologias usadas en el rol</span>
             </label>
-            {#each $RoleStore.tags as tag}
                 <div class="flex flex-row pb-3 gap-2">
-                        <div class="badge badge-primary badge-lg gap-2">
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    {#each $RoleStore.tags as tag}
+                        <div class="badge badge-primary badge-lg gap-2" on:click={() => {removeTag(tag)}}>
                             {tag}
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -80,8 +85,8 @@
                                 /></svg
                             >
                         </div>
+                    {/each}
                 </div>
-            {/each}
             <label class="input-group input-group-lg">
                 <input type="text" placeholder="Search…" class="input w-full input-bordered" id="tag-search" bind:value={$tagSearchInput} />
                 <button class="btn btn-square" on:click={(event) => {
