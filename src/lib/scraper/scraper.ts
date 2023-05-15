@@ -1,6 +1,5 @@
 import * as puppeteer from "puppeteer";
 import type { TJobInfo, Platform, TJobScraperParameters } from "./lib/platform";
-import { datasource, role } from "./lib/arguments";
 import { log } from "./lib/io";
 
 import Computrabajo from "./platforms/computrabajo";
@@ -115,6 +114,7 @@ export class JobScraperQueue {
   private async executeHead() {
     await this.queue[0].scraper.SetDatasource(this.parameters.connection_string);
     await this.queue[0].scraper.RegisterPlatform(Computrabajo);
+    this.queue[0].scraper.RegisterExecutionCallback(() => this.RegisterExecution(this.queue[0].id));
     await this.queue[0].scraper.Init();
     this.empty = false;
   }
@@ -125,6 +125,8 @@ export class JobScraperQueue {
    */
   public RegisterExecution(id: string) {
     if (this.empty) throw newScrapingError("Queue should be empty")
+
+    console.log(`Job with id: ${id} ended`)
 
     this.queue.reduce<TJobScraperWithMetadata[]>((acc, value) => {
       if (value.id == id) {
@@ -193,7 +195,7 @@ export class JobScraper {
       const page = await this.browser.newPage();
 
       const jobLinks = await platform.getJobLinks({
-        data: platform.getUrl(role),
+        data: platform.getUrl(this.parameters.role),
         page, 
         parameters: this.parameters
       });
@@ -244,7 +246,7 @@ export class JobScraper {
       this.parameters.connection_string = conn_str;
       this.datasource = MongoDb;
     }
-    if (!datasource) {
+    if (!this.datasource) {
       throw new Error("Datasource not supported");
     }
     await this.datasource?.connect(this.parameters.connection_string);
@@ -266,6 +268,7 @@ export class JobScraper {
     await this.getJobLinks();
     await this.getJobInfo();
     await this.executionCallback();
+    await this.browser.close();
   }
 }
 

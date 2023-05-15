@@ -104,7 +104,7 @@ function getLevenshteinDistance(str1: string, str2: string): number {
  */
 export async function getTechnologies(input: string): Promise<string[]> {
   const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env.VITE_OPENAI_API_KEY,
   });
   const openai = new OpenAIApi(configuration);
 

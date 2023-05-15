@@ -1,7 +1,6 @@
 import type { Datasource, Table } from "../lib/datasource";
 import type { TJobInfo } from "../lib/platform";
 import { Schema, model, connect } from "mongoose";
-import { datasource as argDatasource } from "../lib/arguments";
 import { log } from "../lib/io";
 import { mean, standardDeviation } from "../lib/helpers";
 

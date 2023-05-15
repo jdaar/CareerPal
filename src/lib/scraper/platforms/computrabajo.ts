@@ -4,7 +4,6 @@ import type {
   TJobInfo,
   Platform,
 } from "../lib/platform";
-import { pages } from "../lib/arguments";
 import { log } from "../lib/io";
 import {
   getListItemsByXPath,
@@ -19,7 +18,7 @@ const WAIT_TIME = 5000;
 export const getJobLinks: GetJobLinksCallback = async (urlPP) => {
   log("info", "getJobLinks", `Getting job links for role...`);
   let jobs: string[] = [];
-  for (let i = 0; i < pages; i++) {
+  for (let i = 0; i < urlPP.parameters.pages; i++) {
     log("debug", "getJobLinks", `Getting job links for page ${i + 1}...`);
     await urlPP.page.goto(urlPP.data + `?p=${i + 1}`);
     const jobLinks: string[] = await urlPP.page.evaluate(() => {
