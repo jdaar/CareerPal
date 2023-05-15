@@ -1,20 +1,40 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { applyAction, deserialize } from '$app/forms';
 	import { writable } from 'svelte/store';
     import { RoleStore } from '../store';
+	import type { ActionResult } from '@sveltejs/kit';
+	import { invalidateAll } from '$app/navigation';
 
 	let { cachedFormData, availablePlatforms } = $page.data;
 
-    RoleStore.set(cachedFormData);
-
-    console.log(cachedFormData);
+    RoleStore.set({
+        platform: 'computrabajo',
+        role: '',
+        ...cachedFormData,
+    });
 
     let tagSearchInput = writable<string>("");
 
-    $: console.log($RoleStore.role);
-    $: console.log($RoleStore.tags);
-    $: console.log($RoleStore.platform);
-    $: console.log($tagSearchInput);
+    const handleSubmit: svelte.JSX.EventHandler<Event, HTMLFormElement> = async (event) => {
+        if (event.target instanceof HTMLFormElement) {
+            const data = new FormData(event.target);
+            data.append('tags', $RoleStore.tags.join(':'));
+
+            const response = await fetch(event.target.action, {
+                method: 'POST',
+                body: data
+            });
+
+            const result: ActionResult = deserialize(await response.text());
+
+            if (result.type === 'success') {
+                await invalidateAll();
+            }
+
+            applyAction(result);
+        }
+    }
 </script>
 
 <div class="flex justify-between pl-8 pt-5 pb-0 pr-8 align-center">
@@ -22,7 +42,7 @@
     <label for="my-drawer" class="btn drawer-button">Historial</label>
 </div>
 <div class="card-body pt-3">
-    <form method="POST" action="?/execute">
+    <form method="POST" action="?/execute" on:submit|preventDefault={handleSubmit}>
         <div class="form-control pt-2 pb-2">
             <label class="label" for="#role">
                 <span class="label-text">Rol que desea desempeñar</span>
@@ -40,41 +60,28 @@
             </label>
         </div>
         <div class="form-control pt-2 pb-2">
-            <label class="label" for="#tag-search">
+            <label class="label" for="tag-search">
                 <span class="label-text">Tecnologias usadas en el rol</span>
             </label>
-            <div class="flex flex-row pb-3 gap-2">
-                <div class="badge badge-primary badge-lg gap-2">
-                    SQL
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        class="inline-block w-4 h-4 stroke-current"
-                        ><path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        /></svg
-                    >
+            {#each $RoleStore.tags as tag}
+                <div class="flex flex-row pb-3 gap-2">
+                        <div class="badge badge-primary badge-lg gap-2">
+                            {tag}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                class="inline-block w-4 h-4 stroke-current"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                /></svg
+                            >
+                        </div>
                 </div>
-                <div class="badge badge-primary badge-lg gap-2">
-                    Python
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        class="inline-block w-4 h-4 stroke-current"
-                        ><path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        /></svg
-                    >
-                </div>
-            </div>
+            {/each}
             <label class="input-group input-group-lg">
                 <input type="text" placeholder="Search…" class="input w-full input-bordered" id="tag-search" bind:value={$tagSearchInput} />
                 <button class="btn btn-square" on:click={(event) => {

@@ -28,7 +28,7 @@
 					<ul class="menu p-4 w-80 bg-base-100 text-base-content">
 						{#each historyEntries as history}
 							{#if history.type === 'role'}
-								<li><button on:click={() => historySelectCallback(history)}>{history.data.role}</button></li>
+								<li><button on:click|preventDefault={() => historySelectCallback(history)}>{history.data.role}</button></li>
 							{/if}
 						{/each}
 					</ul>
