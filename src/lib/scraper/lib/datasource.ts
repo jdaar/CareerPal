@@ -1,3 +1,7 @@
+/**
+ * Datasources should really be a class
+ */
+
 import type { TJobInfo } from "./platform";
 
 type TablesWithKey = {
@@ -25,7 +29,7 @@ export type PostRowCallback<T> = (row: T) => void;
  * console.log(tokens) // [{ token: 'token', excluded: false }]
  * @since 1.0.0
  */
-export type GetRowsCallback<T> = (filter: (value: T) => T) => Promise<T[]>;
+export type GetRowsCallback<T> = (filter: (value: T) => boolean) => Promise<T[]>;
 
 export type Table<T> = {
   created: boolean;

@@ -70,6 +70,7 @@ export class JobScraperQueue {
   private queue: TJobScraperWithMetadata[] = [];
   private parameters: TJobScraperQueueParameters
   private empty = true;
+  public Datasource: Datasource | null = null;
 
   private static instance: JobScraperQueue | null = null
 
@@ -82,6 +83,18 @@ export class JobScraperQueue {
   
   constructor(parameters: TJobScraperQueueParameters) {
     this.parameters = parameters;
+    this.SetDatasource(this.parameters.connection_string);
+  }
+
+  public SetDatasource(conn_str: string){
+    const mongoDbRegex = new RegExp(/^mongodb:\/\/(?:(?:(\w+)?:(\w+)?@)|:?@?)((?:[\w.-])+)(?::(\d+))?(?:\/([\w-]+))?(?:\?([\w-]+=[\w-]+(?:&[\w-]+=[\w-]+)*)?)?$/);
+    if (mongoDbRegex.test(this.parameters.connection_string)) {
+      this.parameters.connection_string = conn_str;
+      this.Datasource = MongoDb;
+    }
+    if (!this.Datasource) {
+      throw new Error("Datasource not supported");
+    }
   }
 
   /**
@@ -112,8 +125,10 @@ export class JobScraperQueue {
    * @since 1.1.0
    */
   private async executeHead() {
-    await this.queue[0].scraper.SetDatasource(this.parameters.connection_string);
-    await this.queue[0].scraper.RegisterPlatform(Computrabajo);
+    if (!this.Datasource) return;
+
+    await this.queue[0].scraper.SetDatasource(this.Datasource);
+    this.queue[0].scraper.RegisterPlatform(Computrabajo);
     this.queue[0].scraper.RegisterExecutionCallback(() => this.RegisterExecution(this.queue[0].id));
     await this.queue[0].scraper.Init();
     this.empty = false;
@@ -240,15 +255,8 @@ export class JobScraper {
     }
   }
 
-  public async SetDatasource(conn_str: string) {
-    const mongoDbRegex = new RegExp(/^mongodb:\/\/(?:(?:(\w+)?:(\w+)?@)|:?@?)((?:[\w.-])+)(?::(\d+))?(?:\/([\w-]+))?(?:\?([\w-]+=[\w-]+(?:&[\w-]+=[\w-]+)*)?)?$/);
-    if (mongoDbRegex.test(this.parameters.connection_string)) {
-      this.parameters.connection_string = conn_str;
-      this.datasource = MongoDb;
-    }
-    if (!this.datasource) {
-      throw new Error("Datasource not supported");
-    }
+  public async SetDatasource(datasource: Datasource) {
+    this.datasource = datasource;
     await this.datasource?.connect(this.parameters.connection_string);
     await this.datasource?.ensureCreated();
   }
@@ -258,7 +266,6 @@ export class JobScraper {
       log("debug", "writeJobInfo", "Inserting job info into database...");
       await this.datasource?.tables.JobInfo.postRow(jobInfo);
     }
-    this.datasource?.tables.JobInfo.getRows((job) => job);
   }
 
   private async run() {

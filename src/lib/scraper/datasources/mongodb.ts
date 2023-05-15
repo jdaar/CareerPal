@@ -38,9 +38,11 @@ const jobInfoTable: Table<TJobInfo> = {
   },
   getRows: async (
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _filter = (job) => job
+    _filter = (job) => true 
   ) => {
     const documents = await JobInfoModel.find();
+    console.log(documents)
+    /*
     const words = documents
       .filter(
         (document, index, array) =>
@@ -74,6 +76,7 @@ const jobInfoTable: Table<TJobInfo> = {
     console.log('StdDev: ', standardDeviation(processedSalaries));
     console.log('Mean: ', mean(processedSalaries));
     console.log(JSON.stringify(Object.fromEntries(words)));
+    */
     return documents;
   }
 };
