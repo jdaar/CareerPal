@@ -74,27 +74,20 @@ export class JobScraperQueue {
 
   private static instance: JobScraperQueue | null = null
 
-  public static GetInstance(parameters: TJobScraperQueueParameters): JobScraperQueue {
+  public static GetInstance(parameters: TJobScraperQueueParameters, datasource: Datasource): JobScraperQueue {
     if (JobScraperQueue.instance === null) {
-      JobScraperQueue.instance = new JobScraperQueue(parameters)
+      JobScraperQueue.instance = new JobScraperQueue(parameters, datasource)
     }
     return JobScraperQueue.instance;
   }
   
-  constructor(parameters: TJobScraperQueueParameters) {
+  constructor(parameters: TJobScraperQueueParameters, datasource: Datasource) {
     this.parameters = parameters;
-    this.SetDatasource(this.parameters.connection_string);
+    this.Datasource = datasource;
   }
 
-  public SetDatasource(conn_str: string){
-    const mongoDbRegex = new RegExp(/^mongodb:\/\/(?:(?:(\w+)?:(\w+)?@)|:?@?)((?:[\w.-])+)(?::(\d+))?(?:\/([\w-]+))?(?:\?([\w-]+=[\w-]+(?:&[\w-]+=[\w-]+)*)?)?$/);
-    if (mongoDbRegex.test(this.parameters.connection_string)) {
-      this.parameters.connection_string = conn_str;
-      this.Datasource = MongoDb;
-    }
-    if (!this.Datasource) {
-      throw new Error("Datasource not supported");
-    }
+  public SetDatasource(datasource: Datasource){
+    this.Datasource = datasource;
   }
 
   /**
@@ -257,14 +250,12 @@ export class JobScraper {
 
   public async SetDatasource(datasource: Datasource) {
     this.datasource = datasource;
-    await this.datasource?.connect(this.parameters.connection_string);
-    await this.datasource?.ensureCreated();
   }
 
   private async postJobInfo(jobInfo: TJobInfo) {
-    if (this.datasource?.tables.JobInfo.created) {
+    if (this.datasource?.Tables.JobInfo.Created) {
       log("debug", "writeJobInfo", "Inserting job info into database...");
-      await this.datasource?.tables.JobInfo.postRow(jobInfo);
+      await this.datasource?.Tables.JobInfo.PostRow(jobInfo);
     }
   }
 

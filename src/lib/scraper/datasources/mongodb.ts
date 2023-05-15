@@ -1,6 +1,6 @@
-import type { Datasource, Table } from "../lib/datasource";
+import type { GetRowsCallback, PostRowCallback, Table, TablesWithKey } from "../lib/datasource";
 import type { TJobInfo } from "../lib/platform";
-import { Schema, model, connect } from "mongoose";
+import mongoose, { Schema, model, connect, Connection, Model } from "mongoose";
 import { log } from "../lib/io";
 import { mean, standardDeviation } from "../lib/helpers";
 
@@ -17,30 +17,30 @@ const JobInfoSchema = new Schema<TJobInfo>({
   requirements: [String],
 });
 
-const JobInfoModel = model<TJobInfo>("job-info", JobInfoSchema);
 
-const jobInfoTable: Table<TJobInfo> = {
-  created: false,
-  create: async () => {
-    if (jobInfoTable.created) return;
-    await JobInfoModel.createCollection();
-    jobInfoTable.created = true;
-  },
-  postRow: async (row) => {
-    log("info", "jobInfoPostRow", `Posting row to table JobInfo...`);
-    const newJobInfo = new JobInfoModel(row);
-    log(
-      "debug",
-      "jobInfoPostRow",
-      `Row posted to table JobInfo: ${JSON.stringify(newJobInfo)}`
-    );
-    await newJobInfo.save();
-  },
-  getRows: async (
+class JobInfoTable implements Table<TJobInfo> {
+  public Created = false;
+  private connection: Connection | null = null;
+  private jobInfoModel: Model<TJobInfo> | null = null;
+
+  public SetConnection(conn: Connection) {
+     this.connection = conn;
+     this.jobInfoModel = this.connection.model<TJobInfo>("job-info", JobInfoSchema);
+  }
+
+  public Create = async () => {
+    if (this.jobInfoModel == null) throw new Error('Model should not be null');
+    if (this.Created) return;
+    await this.jobInfoModel.createCollection();
+    this.Created = true;
+  };
+
+  public GetRows: GetRowsCallback<TJobInfo> = async (
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _filter = (job) => true 
   ) => {
-    const documents = await JobInfoModel.find();
+    if (this.jobInfoModel == null) throw new Error('Model should not be null');
+    const documents = await this.jobInfoModel.find();
     console.log(documents)
     /*
     const words = documents
@@ -79,20 +79,45 @@ const jobInfoTable: Table<TJobInfo> = {
     */
     return documents;
   }
-};
 
-const datasource: Datasource = {
-  name: "mongodb",
-  connect: async (conn_str: string) => {
-    await connect(conn_str);
-  },
-  ensureCreated: async () => {
-    if (!jobInfoTable.created)
-      await jobInfoTable.create();
-  },
-  tables: {
-    JobInfo: jobInfoTable,
+  public PostRow: PostRowCallback<TJobInfo> = async (row) => {
+    if (this.jobInfoModel == null) throw new Error('Model should not be null');
+    log("info", "jobInfoPostRow", `Posting row to table JobInfo...`);
+    const newJobInfo = new this.jobInfoModel(row);
+    log(
+      "debug",
+      "jobInfoPostRow",
+      `Row posted to table JobInfo: ${JSON.stringify(newJobInfo)}`
+    );
+    await newJobInfo.save();
   }
-};
+}
 
-export default datasource;
+class Datasource implements Datasource {
+  public Name = "mongodb";
+  private connection: Connection | null = null;
+  public Tables: TablesWithKey
+
+  constructor() {
+    this.Tables = {
+      JobInfo: new JobInfoTable()
+    }
+  }
+
+  public async Connect(conn_str: string) {
+    await connect(conn_str);
+    this.connection = mongoose.connection;
+    this.connection.on("error", console.error.bind(console, "Connection error: "));
+    this.connection.once("open", function () {
+      console.log("Connected successfully");
+    });
+    this.Tables.JobInfo.SetConnection(this.connection);
+  }
+
+  public async EnsureCreated() {
+    if (!this.Tables.JobInfo.Created)
+      await this.Tables.JobInfo.Create();
+  }
+}
+
+export default Datasource;

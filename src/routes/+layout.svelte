@@ -6,6 +6,24 @@
 
 <div class="navbar bg-base-100 p-5">
 	<div class="navbar-start">
+		<a href="/" class="p-2">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="h-6 w-6"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+				stroke-width="2"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+				/>
+				<polyline points="9 22 9 12 15 12 15 22"/>
+			</svg>
+		</a>
 	</div>
 	<div class="navbar-center hidden lg:flex">
 		<ul class="steps">

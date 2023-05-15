@@ -2,9 +2,10 @@
  * Datasources should really be a class
  */
 
+import mongoose, { Connection } from "mongoose";
 import type { TJobInfo } from "./platform";
 
-type TablesWithKey = {
+export type TablesWithKey = {
   JobInfo: Table<TJobInfo>
 }
 
@@ -31,16 +32,19 @@ export type PostRowCallback<T> = (row: T) => void;
  */
 export type GetRowsCallback<T> = (filter: (value: T) => boolean) => Promise<T[]>;
 
-export type Table<T> = {
-  created: boolean;
-  create: () => void;
-  postRow: PostRowCallback<T>;
-  getRows: GetRowsCallback<T>;
+
+export abstract class Table<T> {
+  public abstract Created: boolean;
+  public abstract PostRow: PostRowCallback<T>;
+  public abstract GetRows: GetRowsCallback<T>;
+  public abstract SetConnection: (conn: any) => void;
+
+  public abstract Create: () => void;
 };
 
-export type Datasource = {
-  name: string;
-  connect: (connection_string: string) => void;
-  ensureCreated: () => void;
-  tables: TablesWithKey
+export abstract class Datasource {
+  public abstract Name: string;
+  public abstract Connect: (connection_string: string) => void;
+  public abstract EnsureCreated: () => void;
+  public abstract Tables: TablesWithKey
 };
