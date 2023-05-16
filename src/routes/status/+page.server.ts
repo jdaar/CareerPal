@@ -9,8 +9,6 @@ export const load = (async ({ locals }) => {
 		status: v.status
 	}))
 
-	console.log(rows)
-
 	return {
 		rows
 	};

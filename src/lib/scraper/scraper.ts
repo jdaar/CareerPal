@@ -196,7 +196,7 @@ export class JobScraper {
     this.browser = await puppeteer.launch({
       //executablePath: "/usr/bin/chromium",
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      headless: false,
+      headless: true,
     });
     this.run();
   }

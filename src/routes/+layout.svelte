@@ -69,7 +69,7 @@
 		</ul>
 	</div>
 	<div class="navbar-end">
-		{#if $page.url.pathname !== '/query/execute'}
+		{#if $page.url.pathname !== '/query/execute' && $page.url.pathname.startsWith('/query')}
 			<button class="btn btn-primary" on:click={() => goto('/query/execute')}>Ejecutar</button>
 		{/if}
 	</div>
