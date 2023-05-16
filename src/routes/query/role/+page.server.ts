@@ -1,5 +1,5 @@
 import type { PageServerLoad, Actions } from './$types';
-import { AvailablePlatforms, type THistoryEntry, type TParameterFormData, type TRoleFormData } from '../store';
+import { AvailablePlatforms, type THistoryEntry, type TRoleFormData } from '../store';
 import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ cookies }) => {
@@ -8,8 +8,8 @@ export const load = (async ({ cookies }) => {
 	const safeCachedFormData: TRoleFormData = {
 		platform: 'computrabajo',
 		role: '',
-		tags: [],
-		...cachedFormData.data
+		...cachedFormData.data,
+		tags: cachedFormData.data.tags.filter((v: string) => v !== '')
 	}
 
 	return {

@@ -66,8 +66,8 @@ function newScrapingError(message: string, error?: Error) {
  * @since 1.1.0
  */
 export class JobScraperQueue {
-  private queue: TJobScraperWithMetadata[] = [];
-  private instancedQueue: TJobScraperWithMetadata[] = [];
+  public queue: TJobScraperWithMetadata[] = [];
+  public InstancedQueue: TJobScraperWithMetadata[] = [];
   private parameters: TJobScraperQueueParameters
   private empty = true;
   public Datasource: Datasource | null = null;
@@ -124,16 +124,21 @@ export class JobScraperQueue {
   private async executeHead() {
     if (!this.Datasource) return;
 
+    const id = this.queue[0].id;
+
     await this.queue[0].scraper.SetDatasource(this.Datasource);
     this.queue[0].scraper.RegisterPlatform(Computrabajo);
-    this.queue[0].scraper.RegisterExecutionCallback(() => this.RegisterExecution(this.queue[0].id));
+    this.queue[0].scraper.RegisterExecutionCallback(() => this.RegisterExecution(id));
+
+
     try {
       await this.queue[0].scraper.Init();
+      this.queue[0].status = 'running';
+      this.InstancedQueue.push(this.queue[0]);
+      this.queue.shift();
     } catch (error) {
         throw newScrapingError("Scraper execution failed", error as Error);
     }
-    this.instancedQueue.push(this.queue[0]);
-    this.queue.shift();
     this.empty = false;
   }
 
@@ -146,14 +151,14 @@ export class JobScraperQueue {
 
     console.log(`Job with id: ${id} ended`)
 
-    this.instancedQueue.reduce<TJobScraperWithMetadata[]>((acc, value) => {
+    this.InstancedQueue.reduce<TJobScraperWithMetadata[]>((acc, value) => {
       if (value.id == id) {
         value.status = 'finished';
       }
       acc.push(value);
       return acc;
     }, [])
-    if (this.queue.find((value) => value.status == 'running') == undefined) {
+    if (this.InstancedQueue.find((value) => value.status == 'running') == undefined) {
       this.empty = true;
     }
   }
@@ -175,8 +180,8 @@ export class JobScraper {
   private jobsLinks: Map<string, string[]>;
   private jobsInfo: Map<string, TJobInfo[]>;
   private executionCallback: () => void;
-  private parameters: TJobScraperParameters;
-  private datasource: Datasource | null = null; 
+  public Parameters: TJobScraperParameters;
+  public datasource: Datasource | null = null; 
 
   constructor(parameters: TJobScraperParameters) {
     this.browser = null;
@@ -184,7 +189,7 @@ export class JobScraper {
     this.jobsInfo = new Map();
     this.executionCallback = () => {return};
 
-    this.parameters = parameters;
+    this.Parameters = parameters;
   }
 
   public async Init() {
@@ -214,9 +219,9 @@ export class JobScraper {
 
       try {
         const jobLinks = await platform.getJobLinks({
-          data: platform.getUrl(this.parameters.role),
+          data: platform.getUrl(this.Parameters.role),
           page, 
-          parameters: this.parameters
+          parameters: this.Parameters
         });
         this.jobsLinks.set(platform.name, jobLinks);
       } catch (error) {
@@ -252,7 +257,7 @@ export class JobScraper {
           const jobInfo = await platform.getJobInfo({
             data: jobLink,
             page, 
-            parameters: this.parameters
+            parameters: this.Parameters
           });
           this.postJobInfo(jobInfo);
           jobsInfo.push(jobInfo);

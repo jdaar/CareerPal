@@ -27,7 +27,7 @@
 	</div>
 	<div class="navbar-center hidden lg:flex">
 		<ul class="steps">
-			{#if $page.url.pathname !== '/analysis'}
+			{#if $page.url.pathname.startsWith('/query')}
 				<li class="step step-primary">
 					<a href="/query/role">
 						Parametrizacion del query
@@ -37,6 +37,19 @@
 				<li class="step">
 					<a href="/query/role">
 						Parametrizacion del query
+					</a>
+				</li>
+			{/if}
+			{#if $page.url.pathname === '/status'}
+				<li class="step step-primary">
+					<a href="/status">
+						Status
+					</a>
+				</li>
+			{:else}
+				<li class="step">
+					<a href="/status">
+						Status
 					</a>
 				</li>
 			{/if}

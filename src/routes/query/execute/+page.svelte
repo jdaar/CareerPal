@@ -14,7 +14,7 @@
     {#if cachedRoleFormData !== null && cachedRoleFormData !== undefined}
         <p><span class="font-bold">Rol</span>: {cachedRoleFormData.role}</p>
         <p><span class="font-bold">Plataforma</span>: {cachedRoleFormData.platform}</p>
-        <p><span class="font-bold">Tags</span>: {cachedRoleFormData.tags.join(', ')}</p>
+        <p><span class="font-bold">Tags</span>: {cachedRoleFormData.tags.length > 0 ? cachedRoleFormData.tags.join(', '): 'Por defecto'}</p>
     {:else}
         <p>Diligencia el formulario</p>
     {/if}
