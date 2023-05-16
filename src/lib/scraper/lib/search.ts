@@ -104,45 +104,52 @@ function getLevenshteinDistance(str1: string, str2: string): number {
  */
 export async function getTechnologies(input: string): Promise<string[]> {
   const configuration = new Configuration({
-    apiKey: process.env.VITE_OPENAI_API_KEY,
+    apiKey: process.env.OPENAI_API_KEY,
   });
   const openai = new OpenAIApi(configuration);
 
-  const response = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: `Determina unicamente las tecnologias que estan presentes en la siguiente descripcion de empleo, descartando toda descripcion del cargo como horario, tipo de contrato, modalidad, años de experiencia en el cargo, ubicaciones, habilidades blandas solicitadas, etc. Solamente se deben incluir en la salida los elementos que esten indicados explicitamente en el texto. el formato de salida debe ser una sola lista separada por comas (ejemplo: Photoshop,Illustrator,C++,C#,F#,Typescript) y en caso de no encontrar tecnologias la salida debe ser la siguiente cadena de texto "NONE"
+  try {
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: `Determina unicamente las tecnologias que estan presentes en la siguiente descripcion de empleo, descartando toda descripcion del cargo como horario, tipo de contrato, modalidad, años de experiencia en el cargo, ubicaciones, habilidades blandas solicitadas, etc. Solamente se deben incluir en la salida los elementos que esten indicados explicitamente en el texto. el formato de salida debe ser una sola lista separada por comas (ejemplo: Photoshop,Illustrator,C++,C#,F#,Typescript) y en caso de no encontrar tecnologias la salida debe ser la siguiente cadena de texto "NONE"
 
-Humano: Buscamos un candidato con conocimientos en C#, Trabajo en equipo, C++, Unity y Unreal Engine, con gran capacidad de liderazgo. Nos encontramos situados en Medellin y la compensacion seria de 3.000.000
-AI: C#,C++,Unity,Unreal Engine
+  Humano: Buscamos un candidato con conocimientos en C#, Trabajo en equipo, C++, Unity y Unreal Engine, con gran capacidad de liderazgo. Nos encontramos situados en Medellin y la compensacion seria de 3.000.000
+  AI: C#,C++,Unity,Unreal Engine
 
-Humano: Buscamos un programador para maquinas CNC
-AI: NONE
+  Humano: Buscamos un programador para maquinas CNC
+  AI: NONE
 
-Humano: conocimientos en Front-end y Back-end (Bases de datos, MySQL, Python, PHP) para realizar diseño y montaje de una base de datos de control de incentivos, premios y actualización de KPI'S en la falicitación de la búsqueda de estos.
-AI: MySQL,Python,PHP
+  Humano: conocimientos en Front-end y Back-end (Bases de datos, MySQL, Python, PHP) para realizar diseño y montaje de una base de datos de control de incentivos, premios y actualización de KPI'S en la falicitación de la búsqueda de estos.
+  AI: MySQL,Python,PHP
 
-Humano: Empresa de Ingeniería enfocada a la creación y comercialización de productos de software busca Desarrolladores web junior o intermedios que hagan parte de su equipo. Debe tener conocimiento en desarrollo de sistemas de información, utilizando frameworks como SYMFONY o LARAVEL, Importante que sea autodidacta y que sea curioso. Así mismo, debe ser capaz de afrontar retos cognitivos para la solución de requerimientos por parte de la empresa y de sus clientes. El trabajo permite tener una curva de aprendizaje adecuada, compartir con compañeros que tienen mayor conocimiento y experiencia, participar de actividades de integración y crecimiento personal.
-AI: Symphony,Laravel
+  Humano: Empresa de Ingeniería enfocada a la creación y comercialización de productos de software busca Desarrolladores web junior o intermedios que hagan parte de su equipo. Debe tener conocimiento en desarrollo de sistemas de información, utilizando frameworks como SYMFONY o LARAVEL, Importante que sea autodidacta y que sea curioso. Así mismo, debe ser capaz de afrontar retos cognitivos para la solución de requerimientos por parte de la empresa y de sus clientes. El trabajo permite tener una curva de aprendizaje adecuada, compartir con compañeros que tienen mayor conocimiento y experiencia, participar de actividades de integración y crecimiento personal.
+  AI: Symphony,Laravel
 
-INICIO DE LA DESCRIPCION DE EMPLEO
-
-
-${input}
+  INICIO DE LA DESCRIPCION DE EMPLEO
 
 
-FIN DE LA DESCRIPCION DE EMPLEO`,
-    temperature: 0,
-    max_tokens: 60,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  });
+  ${input}
 
-  const technologies = response.data.choices[0].text
-    ?.replace("\n\n", "")
-    .replace("AI:", "")
-    .trim()
-    .toLowerCase()
-    .split(",");
-  return technologies ?? [];
+
+  FIN DE LA DESCRIPCION DE EMPLEO`,
+      temperature: 0,
+      max_tokens: 60,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+
+    const technologies = response.data.choices[0].text
+      ?.replace("\n\n", "")
+      .replace("AI:", "")
+      .trim()
+      .toLowerCase()
+      .split(",");
+
+    return technologies ?? [];
+  } catch (error) {
+    console.error(`OpenAI api error: ${error}`)
+  }
+  
+  return [];
 }

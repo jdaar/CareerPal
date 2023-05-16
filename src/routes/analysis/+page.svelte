@@ -81,7 +81,6 @@
             }
         }
     })
-    $: console.log($page.data)
 </script>
 
 <section class="flex flex-col justify-center antialiased min-h-full m-2 mt-0">

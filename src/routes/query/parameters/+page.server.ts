@@ -22,10 +22,14 @@ export const actions = {
 		const parsedData = Object.fromEntries(data)
 		if (parsedData.role === '') return;
 
-		cookies.set('cachedParameterFormData', JSON.stringify({type: 'parameter', data: parsedData}));
+		cookies.set('cachedParameterFormData', JSON.stringify({type: 'parameter', data: parsedData}), {
+			path: '/'
+		});
 
 		const cachedHistoryEntries: {data: Array<THistoryEntry>} = JSON.parse(cookies.get('cachedHistoryEntries') ?? '{"data": []}');
-		cookies.set('cachedHistoryEntries', JSON.stringify({data: [...cachedHistoryEntries.data, {type: 'parameter', data: parsedData}]}));
+		cookies.set('cachedHistoryEntries', JSON.stringify({data: [...cachedHistoryEntries.data, {type: 'parameter', data: parsedData}]}), {
+			path: '/'
+		});
 
 		throw redirect(301, '/query/execute')
 	},

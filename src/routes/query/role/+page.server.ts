@@ -1,5 +1,5 @@
 import type { PageServerLoad, Actions } from './$types';
-import { AvailablePlatforms, type THistoryEntry, type TRoleFormData } from '../store';
+import { AvailablePlatforms, type THistoryEntry, type TParameterFormData, type TRoleFormData } from '../store';
 import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ cookies }) => {
@@ -24,10 +24,28 @@ export const actions = {
 		const parsedData = Object.fromEntries(data)
 		if (parsedData.role === '') return;
 
-		cookies.set('cachedRoleFormData', JSON.stringify({type: 'role', data: {...parsedData, tags: (parsedData.tags as string)?.split(':') ?? []}}));
+		cookies.set('cachedRoleFormData', JSON.stringify({type: 'role', data: {...parsedData, tags: (parsedData.tags as string)?.split(':') ?? []}}), {
+			path: '/'
+		});
 
 		const cachedHistoryEntries: {data: Array<THistoryEntry>} = JSON.parse(cookies.get('cachedHistoryEntries') ?? '{"data": []}');
-		cookies.set('cachedHistoryEntries', JSON.stringify({data: [...cachedHistoryEntries.data, {type: 'role', data: {...parsedData, tags: (parsedData.tags as string)?.split(':') ?? []}}]}));
+
+		const filteredCachedHistoryEntries = [
+			...cachedHistoryEntries.data.
+			filter(v => v.type === 'role')
+			.filter(v => {
+				const entryRole: TRoleFormData = v.data as TRoleFormData;
+				console.log(entryRole)
+				return (entryRole.platform != parsedData.platform)
+						&& (entryRole.role != parsedData.role)
+						&& (entryRole.tags != (parsedData.tags as string)?.split(':') ?? []);
+			}),
+			...cachedHistoryEntries.data.filter(v => v.type === 'parameter')
+		];
+
+		cookies.set('cachedHistoryEntries', JSON.stringify({data: [...filteredCachedHistoryEntries, {type: 'role', data: {...parsedData, tags: (parsedData.tags as string)?.split(':') ?? []}}]}), {
+			path: '/'
+		});
 
 		throw redirect(301, '/query/parameters')
 	},

@@ -13,7 +13,7 @@ import {
 } from "../lib/helpers";
 import { getTechnologies } from "../lib/search";
 
-const WAIT_TIME = 5000;
+const WAIT_TIME = 2000;
 
 export const getJobLinks: GetJobLinksCallback = async (urlPP) => {
   log("info", "getJobLinks", `Getting job links for role...`);
@@ -46,6 +46,7 @@ export const getJobLinks: GetJobLinksCallback = async (urlPP) => {
 
 export const getJobInfo: GetJobInfoCallback = async (urlPP) => {
   await urlPP.page.goto(urlPP.data);
+  await sleep(WAIT_TIME);
   log("info", "main", `Getting info for job ${urlPP.data}...`);
 
   const jobInfo: TJobInfo = {

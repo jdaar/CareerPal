@@ -1,6 +1,6 @@
 import type { GetMetricsCallback, GetRowsCallback, PostRowCallback, Table, TablesWithKey } from "../lib/datasource";
 import type { TJobInfo } from "../lib/platform";
-import mongoose, { Schema, model, connect, Connection, Model } from "mongoose";
+import mongoose, { Schema, connect, Connection, Model, disconnect } from "mongoose";
 import { log } from "../lib/io";
 import { mean, standardDeviation } from "../lib/helpers";
 
@@ -25,7 +25,7 @@ class JobInfoTable implements Table<TJobInfo> {
 
   public SetConnection(conn: Connection) {
      this.connection = conn;
-     this.jobInfoModel = this.connection.model<TJobInfo>("job-info", JobInfoSchema);
+     this.jobInfoModel = this.connection?.model<TJobInfo>("job-info", JobInfoSchema);
   }
 
   public Create = async () => {
@@ -97,6 +97,8 @@ class JobInfoTable implements Table<TJobInfo> {
 
 class Datasource implements Datasource {
   public Name = "mongodb";
+  public ConnectionStr = "";
+  public Connected = false;
   private connection: Connection | null = null;
   public Tables: TablesWithKey
 
@@ -106,13 +108,20 @@ class Datasource implements Datasource {
     }
   }
 
+  public async Disconnect() {
+    this.connection?.close();
+    this.Connected = false;
+    this.Tables.JobInfo.SetConnection(null);
+  }
+
   public async Connect(conn_str: string) {
-    await connect(conn_str);
-    this.connection = mongoose.connection;
+    this.ConnectionStr = conn_str
+    this.connection = await mongoose.createConnection(this.ConnectionStr);
     this.connection.on("error", console.error.bind(console, "Connection error: "));
     this.connection.once("open", function () {
       console.log("Connected successfully");
     });
+    this.Connected = true;
     this.Tables.JobInfo.SetConnection(this.connection);
   }
 

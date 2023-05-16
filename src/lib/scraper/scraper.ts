@@ -3,7 +3,6 @@ import type { TJobInfo, Platform, TJobScraperParameters } from "./lib/platform";
 import { log } from "./lib/io";
 
 import Computrabajo from "./platforms/computrabajo";
-import MongoDb from "./datasources/mongodb";
 import type { Datasource } from "./lib/datasource";
 import { GenerateGuid } from "./lib/helpers";
 
@@ -52,8 +51,8 @@ export type TJobScraperQueueParameters = {
  * @returns Error instance with templated applied
  * @since 1.1.0
  */
-function newScrapingError(message: string) {
-  return new Error(`An error ocurred while scraping the data (JobScraper): ${message}`);
+function newScrapingError(message: string, error?: Error) {
+  return new Error(`An error ocurred while scraping the data (JobScraper): ${message}\n${error?.message}`);
 }
 
 /**
@@ -109,7 +108,11 @@ export class JobScraperQueue {
     if (this.empty) throw newScrapingError("Queue should not be empty")
     
     for (let i = 0; i < this.parameters.batch_size; i++) {
-      await this.executeHead();
+      try {
+        await this.executeHead();
+      } catch (error) {
+        throw newScrapingError("Head execution failed", error as Error);
+      }
     }
   }
 
@@ -123,7 +126,11 @@ export class JobScraperQueue {
     await this.queue[0].scraper.SetDatasource(this.Datasource);
     this.queue[0].scraper.RegisterPlatform(Computrabajo);
     this.queue[0].scraper.RegisterExecutionCallback(() => this.RegisterExecution(this.queue[0].id));
-    await this.queue[0].scraper.Init();
+    try {
+      await this.queue[0].scraper.Init();
+    } catch (error) {
+        throw newScrapingError("Scraper execution failed", error as Error);
+    }
     this.empty = false;
   }
 
@@ -202,13 +209,17 @@ export class JobScraper {
 
       const page = await this.browser.newPage();
 
-      const jobLinks = await platform.getJobLinks({
-        data: platform.getUrl(this.parameters.role),
-        page, 
-        parameters: this.parameters
-      });
+      try {
+        const jobLinks = await platform.getJobLinks({
+          data: platform.getUrl(this.parameters.role),
+          page, 
+          parameters: this.parameters
+        });
+        this.jobsLinks.set(platform.name, jobLinks);
+      } catch (error) {
+        throw newScrapingError("Couldn't retrieve job links", error as Error);
+      }
 
-      this.jobsLinks.set(platform.name, jobLinks);
 
       await page.close();
     }
@@ -234,13 +245,18 @@ export class JobScraper {
 
       const jobsInfo: TJobInfo[] = [];
       for (const jobLink of jobsLinks) {
-        const jobInfo = await platform.getJobInfo({
-          data: jobLink,
-          page, 
-          parameters: this.parameters
-        });
-        this.postJobInfo(jobInfo);
-        jobsInfo.push(jobInfo);
+        try {
+          const jobInfo = await platform.getJobInfo({
+            data: jobLink,
+            page, 
+            parameters: this.parameters
+          });
+          this.postJobInfo(jobInfo);
+          jobsInfo.push(jobInfo);
+        } catch (error) {
+          console.error(newScrapingError(`Couldn't retrieve job info for job ${jobLink}`, error as Error));
+          continue;
+        }
       }
 
       this.jobsInfo.set(platform.name, jobsInfo);
@@ -255,13 +271,17 @@ export class JobScraper {
   private async postJobInfo(jobInfo: TJobInfo) {
     if (this.datasource?.Tables.JobInfo.Created) {
       log("debug", "writeJobInfo", "Inserting job info into database...");
-      await this.datasource?.Tables.JobInfo.PostRow(jobInfo);
+      try {
+        await this.datasource?.Tables.JobInfo.PostRow(jobInfo);
+      } catch (error) {
+        throw newScrapingError("Couldn't post JobInfo row", error as Error);
+      }
     }
   }
 
   private async run() {
     if (!this.browser) {
-      throw new Error("Browser not initialized.");
+      throw newScrapingError("Browser not initialized.");
     }
     await this.getJobLinks();
     await this.getJobInfo();

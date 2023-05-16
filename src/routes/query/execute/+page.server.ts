@@ -1,4 +1,5 @@
 import { JobScraper } from "$lib/scraper/scraper";
+import { redirect } from "@sveltejs/kit";
 import type { TParameterFormData, TRoleFormData } from "../store";
 import type { Actions, PageServerLoad } from "./$types";
 
@@ -27,6 +28,11 @@ export const actions = {
         })
 
         locals.JobScraperQueue.Add(jobScraper);
-        await locals.JobScraperQueue.ExecuteBatch();
+        try {
+            await locals.JobScraperQueue.ExecuteBatch();
+        } catch (error) {
+            console.error(error);
+        } 
+        throw redirect(301, '/analysis');
 	},
 } satisfies Actions;

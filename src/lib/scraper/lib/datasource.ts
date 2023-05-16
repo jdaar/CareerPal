@@ -2,7 +2,6 @@
  * Datasources should really be a class
  */
 
-import mongoose, { Connection } from "mongoose";
 import type { TJobInfo } from "./platform";
 
 export type TablesWithKey = {
@@ -30,7 +29,7 @@ export type PostRowCallback<T> = (row: T) => void;
  * console.log(tokens) // [{ token: 'token', excluded: false }]
  * @since 1.0.0
  */
-export type GetRowsCallback<T> = (filter: (value: T) => boolean) => Promise<T[]>;
+export type GetRowsCallback<T> = (filter?: (value: T) => boolean) => Promise<T[]>;
 
 export type TMetrics = {
   salaries?: number[],
@@ -56,7 +55,10 @@ export abstract class Table<T> {
 
 export abstract class Datasource {
   public abstract Name: string;
+  public abstract ConnectionStr: string;
+  public abstract Connected: boolean;
   public abstract Connect: (connection_string: string) => void;
+  public abstract Disconnect: () => void;
   public abstract EnsureCreated: () => void;
   public abstract Tables: TablesWithKey
 };
