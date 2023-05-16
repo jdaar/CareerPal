@@ -53,15 +53,15 @@
 					</a>
 				</li>
 			{/if}
-			{#if $page.url.pathname === '/analysis'}
+			{#if $page.url.pathname.startsWith('/analysis')}
 				<li class="step step-primary">
-					<a href="/analysis">
+					<a href="/analysis/role">
 						Analisis
 					</a>
 				</li>
 			{:else}
 				<li class="step">
-					<a href="/analysis">
+					<a href="/analysis/role">
 						Analisis
 					</a>
 				</li>
@@ -81,7 +81,7 @@
 </div>
 <div class="flex lg:hidden justify-center p-10">
 	<ul class="steps">
-		{#if $page.url.pathname !== '/analysis'}
+		{#if !$page.url.pathname.startsWith('/analysis')}
 			<li class="step step-primary">
 				<a href="/query/role">
 					Parametrizacion del query
