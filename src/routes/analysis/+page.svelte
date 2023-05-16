@@ -5,7 +5,6 @@
     import { page } from '$app/stores';
     import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import type { TMetrics } from '$lib/scraper/lib/datasource';
 
     const { metrics, row_count } = $page.data
 
@@ -13,13 +12,6 @@
         style: 'currency',
         currency: 'COP',
     });
-
-    // Helper function to display thousands in K format
-    const formatThousands = (value: number) =>
-    Intl.NumberFormat("en-US", {
-        maximumSignificantDigits: 3,
-        notation: "compact",
-    }).format(value);
 
     Chart.register(...registerables);
     Chart.register(WordCloudController, WordElement);
@@ -51,8 +43,6 @@
             words = words.filter((d) => d.value > 1)
             words = words.sort((a, b) => b.value - a.value).slice(0, 100)
             words = words.map((d) => ({ key: d.key, value: d.value / 10 }))
-
-            console.log(words)
 
             const ctx = <HTMLCanvasElement> document.getElementById("analytics-card-01");
 
@@ -87,7 +77,7 @@
     <div class="max-w-full mx-auto p-4 sm:px-6 h-full">
         <div class="card w-full bg-base-100 border border-base-300 shadow-xl">
             <header class="px-5 py-4 b flex flex-col md:flex-row items-center justify-between min-w-full">
-                <h2 class="font-semibold text-xl">Analiticas para rol "Desarrollador web"</h2>
+                <h2 class="font-semibold text-xl">Analisis</h2>
                 <div class="flex mt-5 md:mt-0">
                     <button class="btn btn-primary m-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>

@@ -1,9 +1,9 @@
 import * as dotenv from "dotenv";
 dotenv.config();
-import { AvailableTechnologies, EXCLUDED_TOKENS } from "./dictionaries";
-import { max_distance, min_length } from "./arguments";
+import { DEFAULT_TAGS, EXCLUDED_TOKENS } from "./dictionaries";
 import { log } from "./io";
 import { Configuration, OpenAIApi } from "openai";
+import Fuse from 'fuse.js'
 
 const memoizedClosestTechnologyName = new Map<string, string>();
 
@@ -28,7 +28,7 @@ export function findClosestTechnologyName(input: string): string | null {
 
   let closestMatch = "";
   let minDistance = Infinity;
-  for (const techName of AvailableTechnologies) {
+  for (const techName of DEFAULT_TAGS) {
     if (techName.toLowerCase() === input.toLowerCase()) {
       log(
         "debug",
@@ -37,7 +37,7 @@ export function findClosestTechnologyName(input: string): string | null {
       );
       return techName;
     }
-    if (techName.length < min_length || input.length < min_length) {
+    if (techName.length < 3 || input.length < 3) {
       continue;
     }
     const distance = getLevenshteinDistance(
@@ -49,7 +49,7 @@ export function findClosestTechnologyName(input: string): string | null {
       closestMatch = techName;
     }
   }
-  if (minDistance > max_distance) {
+  if (minDistance > 3) {
     return null;
   }
   memoizedClosestTechnologyName.set(input, closestMatch);
@@ -101,8 +101,9 @@ function getLevenshteinDistance(str1: string, str2: string): number {
  * @param input Text to search technologies for.
  * @returns An array with all the technologies included in the input text.
  * @since 1.0.1
+ * @deprecated
  */
-export async function getTechnologies(input: string): Promise<string[]> {
+export async function getTechnologiesOpenAi(input: string): Promise<string[]> {
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -152,4 +153,27 @@ export async function getTechnologies(input: string): Promise<string[]> {
   }
   
   return [];
+}
+
+
+export async function getTags(input: string, tags: string[]): Promise<Array<string>> {
+  const options = {
+    includeScore: true,
+    minMatchCharLength: 4,
+  }
+
+  const splitInput = input.split(' ').filter(v => EXCLUDED_TOKENS.indexOf(v.toLocaleLowerCase().trim()) === -1)
+  const fuse = new Fuse(splitInput, options);
+
+  const returnValue = new Array<string>;
+
+  (tags.length > 0 ? tags : DEFAULT_TAGS).forEach((value) => {
+    const result = fuse.search(value).sort((a, b) => (a?.score ?? 0) - (b?.score ?? 0)).filter(v => (v.score ?? 0) < 0.3);
+
+    if (result.length > 0) {
+      console.log(`${result[0].item}: ${value}`)
+      returnValue.push(value)
+    }
+  })
+  return returnValue;
 }

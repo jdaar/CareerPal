@@ -67,6 +67,7 @@ function newScrapingError(message: string, error?: Error) {
  */
 export class JobScraperQueue {
   private queue: TJobScraperWithMetadata[] = [];
+  private instancedQueue: TJobScraperWithMetadata[] = [];
   private parameters: TJobScraperQueueParameters
   private empty = true;
   public Datasource: Datasource | null = null;
@@ -131,6 +132,8 @@ export class JobScraperQueue {
     } catch (error) {
         throw newScrapingError("Scraper execution failed", error as Error);
     }
+    this.instancedQueue.push(this.queue[0]);
+    this.queue.shift();
     this.empty = false;
   }
 
@@ -143,7 +146,7 @@ export class JobScraperQueue {
 
     console.log(`Job with id: ${id} ended`)
 
-    this.queue.reduce<TJobScraperWithMetadata[]>((acc, value) => {
+    this.instancedQueue.reduce<TJobScraperWithMetadata[]>((acc, value) => {
       if (value.id == id) {
         value.status = 'finished';
       }

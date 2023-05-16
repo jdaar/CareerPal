@@ -18,14 +18,18 @@ export const actions = {
         const cachedParameterFormData: { type: "parameter", data: TParameterFormData } = JSON.parse(cookies.get('cachedParameterFormData') ?? '{}');
         const cachedRoleFormData: { type: "role", data: TRoleFormData } = JSON.parse(cookies.get('cachedRoleFormData') ?? '{}');
 
-        console.log(cachedParameterFormData)
-        console.log(cachedRoleFormData)
-        
+        console.log(cachedRoleFormData.data.role)
+
         const jobScraper = new JobScraper({
             connection_string: cachedParameterFormData.data.connection_string,
             pages: cachedParameterFormData.data.pages,
-            role: cachedRoleFormData.data.role
+            role: cachedRoleFormData.data.role,
+            tags: cachedRoleFormData.data.tags
         })
+
+        console.log("=====================")
+        console.log(jobScraper);
+        console.log("=====================")
 
         locals.JobScraperQueue.Add(jobScraper);
         try {

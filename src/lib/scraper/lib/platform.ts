@@ -1,6 +1,7 @@
 import type { Page } from "puppeteer";
 
 export type TJobInfo = {
+  role_search: string;
   title: string;
   subtitle: string;
   tags: string[];
@@ -15,6 +16,7 @@ export type TJobInfo = {
 
 export type TJobScraperParameters = {
   role: string,
+  tags: string[],
   pages: number,
   verbose?: boolean, 
   connection_string: string,

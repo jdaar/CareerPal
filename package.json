@@ -44,6 +44,7 @@
 		"argparse": "^2.0.1",
 		"chartjs-chart-wordcloud": "^4.2.0",
 		"daisyui": "^2.50.2",
+		"fuse.js": "^6.6.2",
 		"mongoose": "^6.9.2",
 		"openai": "^3.1.0",
 		"puppeteer": "^19.7.1"

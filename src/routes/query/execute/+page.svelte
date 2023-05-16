@@ -11,13 +11,21 @@
 </div>
 <div class="card-body pt-3">
     <h2 class="font-bold leading-10 text-xl">Datos del rol</h2>
-    <p><span class="font-bold">Rol</span>: {cachedRoleFormData.role}</p>
-    <p><span class="font-bold">Plataforma</span>: {cachedRoleFormData.platform}</p>
-    <p><span class="font-bold">Tags</span>: {cachedRoleFormData.tags.join(', ')}</p>
+    {#if cachedRoleFormData !== null && cachedRoleFormData !== undefined}
+        <p><span class="font-bold">Rol</span>: {cachedRoleFormData.role}</p>
+        <p><span class="font-bold">Plataforma</span>: {cachedRoleFormData.platform}</p>
+        <p><span class="font-bold">Tags</span>: {cachedRoleFormData.tags.join(', ')}</p>
+    {:else}
+        <p>Diligencia el formulario</p>
+    {/if}
 
     <h2 class="font-bold leading-10 text-xl">Parametros</h2>
-    <p><span class="font-bold">Texto de conexion</span>: {cachedParameterFormData.connection_string}</p>
-    <p><span class="font-bold">Numero de paginas</span>: {cachedParameterFormData.pages}</p>
+    {#if cachedParameterFormData !== null && cachedParameterFormData !== undefined}
+        <p><span class="font-bold">Texto de conexion</span>: {cachedParameterFormData.connection_string}</p>
+        <p><span class="font-bold">Numero de paginas</span>: {cachedParameterFormData.pages}</p>
+    {:else}
+        <p>Diligencia el formulario</p>
+    {/if}
 
     <br/>
     <br/>

@@ -24,13 +24,15 @@
                 </div>
 				<div class="drawer-side">
 					<label for="my-drawer" class="drawer-overlay" />
-					<ul class="menu p-4 w-80 bg-base-100 text-base-content max-h-fit">
+					<ul class="menu p-4 w-80 bg-base-100 text-base-content h-full">
 						{#each historyEntries as history}
 							{#if history.type === 'role' && $page.url.pathname=='/query/role'}
 								<li><button on:click|preventDefault={() => historySelectCallback(history)}>{history.data.role}</button></li>
 							{/if}
 							{#if history.type === 'parameter' && $page.url.pathname=='/query/parameters'}
-								<li><button on:click|preventDefault={() => historySelectCallback(history)}>{`En ${history.data.connection_string} con un maximo de ${history.data.pages} paginas`}</button></li>
+								<div class="max-h-96">
+									<li><button on:click|preventDefault={() => historySelectCallback(history)}>{`C-${history.data.connection_string}_P-${history.data.pages}`}</button></li>
+								</div>
 							{/if}
 						{/each}
 					</ul>

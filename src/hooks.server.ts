@@ -19,34 +19,35 @@ function GetDatasource(conn_str: string) {
 }
 
 export const handle = (async ({ event, resolve }) => {
-    const connectionStr = (JSON.parse(event.cookies.get('cachedParameterFormData') ?? '{}').data as TParameterFormData).connection_string ?? 'mongodb://localhost:27017/job';
+    const connectionStr = (JSON.parse(event.cookies.get('cachedParameterFormData') ?? '{}').data as TParameterFormData)?.connection_string;
 
-    if (event.locals.Datasource === null || event.locals.Datasource === undefined) {
-      event.locals.Datasource = GetDatasource(connectionStr);
-      if (!event.locals.Datasource.Connected) {
-        await event.locals.Datasource.Connect(connectionStr);
-        await event.locals.Datasource.EnsureCreated();
+    if (connectionStr) {
+      if (event.locals.Datasource === null || event.locals.Datasource === undefined) {
+        event.locals.Datasource = GetDatasource(connectionStr);
+        if (!event.locals.Datasource.Connected) {
+          await event.locals.Datasource.Connect(connectionStr);
+          await event.locals.Datasource.EnsureCreated();
+        }
       }
-    }
 
-    if (event.locals.Datasource.ConnectionStr !== connectionStr) {
-      await event.locals.Datasource?.Disconnect();
-      event.locals.Datasource = GetDatasource(connectionStr);
-      if (!event.locals.Datasource.Connected) {
-        await event.locals.Datasource.Connect(connectionStr);
-        await event.locals.Datasource.EnsureCreated();
-        event.locals.JobScraperQueue?.SetDatasource(event.locals.Datasource);
+      if (event.locals.Datasource.ConnectionStr !== connectionStr) {
+        await event.locals.Datasource?.Disconnect();
+        event.locals.Datasource = GetDatasource(connectionStr);
+        if (!event.locals.Datasource.Connected) {
+          await event.locals.Datasource.Connect(connectionStr);
+          await event.locals.Datasource.EnsureCreated();
+          event.locals.JobScraperQueue?.SetDatasource(event.locals.Datasource);
+        }
       }
+
+      event.locals.JobScraperQueue = JobScraperQueue.GetInstance(
+        {
+          batch_size: 1,
+          connection_string: connectionStr
+        },
+        event.locals.Datasource
+      );
     }
-
-    event.locals.JobScraperQueue = JobScraperQueue.GetInstance(
-      {
-        batch_size: 1,
-        connection_string: connectionStr
-      },
-      event.locals.Datasource
-    );
-
 
     if(event.request.method === 'OPTIONS') {
       return new Response(null, {

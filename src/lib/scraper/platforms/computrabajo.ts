@@ -11,7 +11,7 @@ import {
   getTextByXPath,
   sleep,
 } from "../lib/helpers";
-import { getTechnologies } from "../lib/search";
+import { getTags } from "../lib/search";
 
 const WAIT_TIME = 2000;
 
@@ -50,6 +50,7 @@ export const getJobInfo: GetJobInfoCallback = async (urlPP) => {
   log("info", "main", `Getting info for job ${urlPP.data}...`);
 
   const jobInfo: TJobInfo = {
+    role_search: urlPP.parameters.role,
     title: await getTextByXPath(urlPP.page, "/html/body/main/div[1]/h1"),
     subtitle: await getTextByXPath(urlPP.page, "/html/body/main/div[1]/p"),
     tags: await getMultipleTextByXPath(
@@ -78,11 +79,12 @@ export const getJobInfo: GetJobInfoCallback = async (urlPP) => {
         "/html/body/main/div[2]/div/div[2]/div[3]/ul"
       )
     ).filter((tag) => tag.includes("experiencia"))[0],
-    technologies: await getTechnologies(
+    technologies: await getTags(
       await getTextByXPath(
         urlPP.page,
         "/html/body/main/div[2]/div/div[2]/div[3]/p[1]"
-      )
+      ),
+      urlPP.parameters.tags
     ),
     url: urlPP.data,
   };

@@ -2,7 +2,7 @@
 </script>
 
 <svelte:head>
-	<title>JobSearch</title>
+	<title>CareerPal</title>
 	<meta name="description" content="An app made for job data scraping and analysis" />
 </svelte:head>
 

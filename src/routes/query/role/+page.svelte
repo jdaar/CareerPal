@@ -63,7 +63,7 @@
             <label class="label" for="tag-search">
                 <span class="label-text">Tecnologias usadas en el rol</span>
             </label>
-                <div class="flex flex-row pb-3 gap-2">
+                <div class="flex flex-row pb-3 gap-2 flex-wrap">
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     {#each $RoleStore.tags as tag}
                         <div class="badge badge-primary badge-lg gap-2" on:click={() => {removeTag(tag)}}>

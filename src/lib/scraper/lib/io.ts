@@ -1,6 +1,5 @@
 import * as fs from "fs/promises";
 import { dirname } from "path";
-import { verbose } from "./arguments";
 
 /**
  * Gets an array of objects and writes them to a csv file.
@@ -86,9 +85,6 @@ export function log(
 
   switch (level) {
     case "debug":
-      if (!verbose) {
-        return;
-      }
       console.debug(`${logPrefix} ${message}`);
       break;
     case "info":
