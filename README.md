@@ -1,38 +1,57 @@
-# create-svelte
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-## Creating a project
+![header](./.github/images/header.png)
+---
+| Build                                                                                                                                                   |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![ci](https://github.com/jdaar/FsBuddy/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/jdaar/FsBuddy/actions/workflows/ci.yaml) |
 
-If you're seeing this, you've probably already done this step. Congrats!
+An open-source platform for job data extraction in multiple plataforms and metric generator for datasources, it includes tag detection, with fuzzy search or ai.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+It comes with an intuitive web ui that leets you manage all your scheduled jobs, datasources and analytics
 
-# create a new project in my-app
-npm create svelte@latest my-app
+## Features
+- Hot-swap datasources
+- MongoDb support
+- Computrabajo support
+- Tag detection
+- Metric generation
+    - Salary mean
+    - Salary std deviation
+    - Tag count
+
+## How to run
+
+The project includes a docker compose definition which runs the app with the required services (mongodb).
+
+You just have to install **docker** and run the following commands
+
+```sh
+docker compose build
+docker compose up
 ```
 
-## Developing
+## Demo
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+You can see a demo of the app in the following link: [Go to demo](https://youtu.be/hYKSo_WblS4), this demo doesn't include the job scheduling feature.
 
-```bash
-npm run dev
+## Screenshots
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+![main_screenshot](./.github/images/main_screenshot.png)
 
-## Building
+## Usage
 
-To create a production version of your app:
+The following pictures will show you the basic structure of the UI:
 
-```bash
-npm run build
-```
+## Roadmap
 
-You can preview the production build with `npm run preview`.
+### Milestones
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- [ ] Todo: milestones
+
+### Features
+
+- [ ] Todo: features
+
+
+ 
