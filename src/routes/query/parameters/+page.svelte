@@ -4,7 +4,11 @@
 
 	let { cachedFormData } = $page.data;
 
-    ParameterStore.set(cachedFormData);
+    ParameterStore.set({
+		connection_string: '',
+		pages: 1,
+		...cachedFormData.data
+    });
 </script>
 
 <div class="flex justify-between pl-8 pt-5 pb-0 pr-8 align-center">

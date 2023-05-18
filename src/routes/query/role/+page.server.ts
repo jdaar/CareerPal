@@ -3,14 +3,18 @@ import { AvailablePlatforms, type THistoryEntry, type TRoleFormData } from '../s
 import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ cookies }) => {
-	const cachedFormData = JSON.parse(cookies.get('cachedRoleFormData') ?? '{}');
+    const cachedFormData: { type: "role", data: TRoleFormData } = JSON.parse(cookies.get('cachedRoleFormData') ?? '{}');
 
-	const safeCachedFormData: TRoleFormData = {
-		platform: 'computrabajo',
-		role: '',
-		...cachedFormData.data,
-		tags: cachedFormData.data.tags.filter((v: string) => v !== '')
-	}
+	let safeCachedFormData: TRoleFormData | null = null;
+    if (cachedFormData.data) {
+        if (cachedFormData.data.tags !== null || cachedFormData.data.tags !== undefined) {
+            cachedFormData.data.tags = cachedFormData.data.tags.filter(v => v !== '') ?? [];
+        }
+		safeCachedFormData = {
+			...cachedFormData.data,
+			tags: cachedFormData.data.tags.filter((v: string) => v !== '')
+		}
+    }
 
 	return {
 		availablePlatforms: AvailablePlatforms,

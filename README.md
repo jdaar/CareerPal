@@ -1,10 +1,5 @@
-
-
 ![header](./.github/images/header.png)
 ---
-| Build                                                                                                                                                   |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [![ci](https://github.com/jdaar/FsBuddy/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/jdaar/FsBuddy/actions/workflows/ci.yaml) |
 
 An open-source platform for job data extraction in multiple plataforms and metric generator for datasources, it includes tag detection, with fuzzy search or ai.
 
@@ -24,7 +19,7 @@ It comes with an intuitive web ui that leets you manage all your scheduled jobs,
 
 The project includes a docker compose definition which runs the app with the required services (mongodb).
 
-You just have to install **docker** and run the following commands
+You just have to install **docker** and run the following commands:
 
 ```sh
 docker compose build
@@ -35,23 +30,58 @@ docker compose up
 
 You can see a demo of the app in the following link: [Go to demo](https://youtu.be/hYKSo_WblS4), this demo doesn't include the job scheduling feature.
 
-## Screenshots
-
-![main_screenshot](./.github/images/main_screenshot.png)
-
 ## Usage
 
-The following pictures will show you the basic structure of the UI:
+1. Execute a query
+    - Click "Query parameters" on the roadmap in the navbar
+    - You will now be in the query parameters form, fill it
+    - Execute the query with the button on form submission
+2. Wait for the query to recollect data, **you can see unfinished scraping jobs data**
+3. Go to analytics page and do your thing :)
+
+## Screenshots
+
+### Home
+
+![home_screenshot](./.github/images/home_screenshot.png)
+
+### Role form
+
+![role_screenshot](./.github/images/role_screenshot.png)
+
+### Parameter 
+
+![parameter_screenshot](./.github/images/parameter_screenshot.png)
+
+### Execution summary
+
+![execute_screenshot](./.github/images/execute_screenshot.png)
+
+### Schedule
+
+![schedule_screenshot](./.github/images/schedule_screenshot.png)
+
+### Analytics
+
+#### 1
+
+![analytics_1_screenshot](./.github/images/analytics_1_screenshot.png)
+
+#### 2
+
+![analytics_2_screenshot](./.github/images/analytics_2_screenshot.png)
 
 ## Roadmap
 
 ### Milestones
 
-- [ ] Todo: milestones
+- [ ] Add support for Prisma datasource
+- [ ] Add support for Linkedin
+- [ ] Add support for Indeed
 
 ### Features
 
-- [ ] Todo: features
+- [ ] Scraping job stop
 
 
  

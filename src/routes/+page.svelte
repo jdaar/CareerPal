@@ -13,7 +13,7 @@
 			<p class="p-5">Que deseas hacer</p>
 			<div class="card-actions justify-end">
 				<a href="/query/role" class="btn btn-primary">Programar</a>
-				<a href="/analysis" class="btn btn-primary">Analizar</a>
+				<a href="/analysis/role" class="btn btn-primary">Analizar</a>
 			</div>
 		</div>
 	</div>

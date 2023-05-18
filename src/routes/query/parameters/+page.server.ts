@@ -3,16 +3,10 @@ import type { PageServerLoad, Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ cookies }) => {
-	const cachedFormData = JSON.parse(cookies.get('cachedParameterFormData') ?? '{}');
-
-	const safeCachedFormData: TParameterFormData = {
-		connection_string: '',
-		pages: 1,
-		...cachedFormData.data
-	}
+    const cachedFormData: { type: "parameter", data: TParameterFormData } = JSON.parse(cookies.get('cachedParameterFormData') ?? '{}');
 
 	return {
-		cachedFormData: safeCachedFormData
+		cachedFormData
 	};
 }) satisfies PageServerLoad;
 

@@ -15,6 +15,7 @@
     <th>Compensacion</th>
     <th>Tags</th>
     <th>Experiencia</th>
+    <th>Url</th>
     </tr>
 </thead> 
 <tbody>
@@ -27,6 +28,7 @@
             <td>{row.salary ?? 'No registra'}</td>
             <td>{row.technologies.join(', ') ?? 'No registra'}</td>
             <td>{row.experience ?? 'No registra'}</td>
+            <td><a class="btn btn-active" href="{row.url}">Ir a la oferta</a></td>
     </tr>
     {/each}
 </tbody>

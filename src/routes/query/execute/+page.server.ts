@@ -7,7 +7,11 @@ export const load = (async ({ cookies }) => {
     const cachedParameterFormData: { type: "parameter", data: TParameterFormData } = JSON.parse(cookies.get('cachedParameterFormData') ?? '{}');
     const cachedRoleFormData: { type: "role", data: TRoleFormData } = JSON.parse(cookies.get('cachedRoleFormData') ?? '{}');
 
-    cachedRoleFormData.data.tags = cachedRoleFormData.data.tags.filter(v => v !== '')
+    if (cachedRoleFormData.data) {
+        if (cachedRoleFormData.data.tags !== null || cachedRoleFormData.data.tags !== undefined) {
+            cachedRoleFormData.data.tags = cachedRoleFormData.data.tags.filter(v => v !== '') ?? [];
+        }
+    }
 
     return {
         cachedParameterFormData,
