@@ -1,5 +1,5 @@
-import type { Page } from "puppeteer";
-import { log } from "./io";
+import type { Page } from 'puppeteer';
+import { log } from './io';
 
 /**
  * Helper function to sleep for a given number of milliseconds.
@@ -9,7 +9,7 @@ import { log } from "./io";
  * @since 1.0.0
  */
 export async function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -30,23 +30,19 @@ export const GenerateGuid = () => crypto.randomUUID();
  * console.log(text) // 'text'
  * @since 1.0.0
  */
-export async function getTextByXPath(
-  page: Page,
-  xpath: string
-): Promise<string> {
-  log("info", "getTextByXPath", `Getting text for xpath ${xpath}...`);
-  const element = await page.$x(xpath);
-  if (element.length === 0) {
-    throw new Error(`Element for xpath ${xpath} not found.`);
-  }
-  const text = await element[0].getProperty("textContent");
-  log("debug", "getTextByXPath", `Found text ${text} for xpath ${xpath}.`);
+export async function getTextByXPath(page: Page, xpath: string): Promise<string> {
+	log('info', 'getTextByXPath', `Getting text for xpath ${xpath}...`);
+	const element = await page.$x(xpath);
+	if (element.length === 0) {
+		throw new Error(`Element for xpath ${xpath} not found.`);
+	}
+	const text = await element[0].getProperty('textContent');
+	log('debug', 'getTextByXPath', `Found text ${text} for xpath ${xpath}.`);
 
-  const returnValue = await text.jsonValue();
-  if (returnValue === null)
-    throw new Error(`Text for xpath ${xpath} is undefined.`);
+	const returnValue = await text.jsonValue();
+	if (returnValue === null) throw new Error(`Text for xpath ${xpath} is undefined.`);
 
-  return returnValue;
+	return returnValue;
 }
 
 /**
@@ -60,35 +56,24 @@ export async function getTextByXPath(
  * console.log(texts) // ['text1', 'text2']
  * @since 1.0.0
  */
-export async function getMultipleTextByXPath(
-  page: Page,
-  xpath: string
-): Promise<string[]> {
-  log("info", "getMultipleTextByXPath", `Getting text for xpath ${xpath}...`);
-  const elements = await page.$x(xpath);
-  if (elements.length === 0) {
-    throw new Error(`Element for xpath ${xpath} not found.`);
-  }
-  log(
-    "debug",
-    "getMultipleTextByXPath",
-    `Found ${elements.length} elements for xpath ${xpath}.`
-  );
-  const texts = await Promise.all(
-    elements.map(async (element: any) => {
-      const text = await element.getProperty("textContent");
-      return text.jsonValue() as Promise<string>;
-    })
-  );
-  if (texts === null || texts === undefined || texts.length === 0) {
-    throw new Error(`Text for xpath ${xpath} is undefined.`);
-  }
-  log(
-    "debug",
-    "getMultipleTextByXPath",
-    `Found texts ${texts} for xpath ${xpath}.`
-  );
-  return texts;
+export async function getMultipleTextByXPath(page: Page, xpath: string): Promise<string[]> {
+	log('info', 'getMultipleTextByXPath', `Getting text for xpath ${xpath}...`);
+	const elements = await page.$x(xpath);
+	if (elements.length === 0) {
+		throw new Error(`Element for xpath ${xpath} not found.`);
+	}
+	log('debug', 'getMultipleTextByXPath', `Found ${elements.length} elements for xpath ${xpath}.`);
+	const texts = await Promise.all(
+		elements.map(async (element: any) => {
+			const text = await element.getProperty('textContent');
+			return text.jsonValue() as Promise<string>;
+		})
+	);
+	if (texts === null || texts === undefined || texts.length === 0) {
+		throw new Error(`Text for xpath ${xpath} is undefined.`);
+	}
+	log('debug', 'getMultipleTextByXPath', `Found texts ${texts} for xpath ${xpath}.`);
+	return texts;
 }
 
 /**
@@ -102,31 +87,20 @@ export async function getMultipleTextByXPath(
  * console.log(items) // ['item1', 'item2', 'item3']
  * @since 1.0.0
  */
-export async function getListItemsByXPath(
-  page: Page,
-  xpath: string
-): Promise<string[]> {
-  log(
-    "info",
-    "getListItemsByXPath",
-    `Getting list items for xpath ${xpath}...`
-  );
-  const element = await page.$x(xpath);
-  if (element.length === 0) {
-    throw new Error(`Element for xpath ${xpath} not found.`);
-  }
-  const items = await element[0].$$eval("li", (nodes: any) =>
-    nodes.map((node: any) => node.textContent?.trim() ?? "")
-  );
-  if (items === null || items === undefined || items.length === 0) {
-    throw new Error(`List items for xpath ${xpath} is undefined.`);
-  }
-  log(
-    "debug",
-    "getListItemsByXPath",
-    `Found items ${items} for xpath ${xpath}.`
-  );
-  return items;
+export async function getListItemsByXPath(page: Page, xpath: string): Promise<string[]> {
+	log('info', 'getListItemsByXPath', `Getting list items for xpath ${xpath}...`);
+	const element = await page.$x(xpath);
+	if (element.length === 0) {
+		throw new Error(`Element for xpath ${xpath} not found.`);
+	}
+	const items = await element[0].$$eval('li', (nodes: any) =>
+		nodes.map((node: any) => node.textContent?.trim() ?? '')
+	);
+	if (items === null || items === undefined || items.length === 0) {
+		throw new Error(`List items for xpath ${xpath} is undefined.`);
+	}
+	log('debug', 'getListItemsByXPath', `Found items ${items} for xpath ${xpath}.`);
+	return items;
 }
 
 /**
@@ -138,19 +112,21 @@ export async function getListItemsByXPath(
  * @since 1.0.1
  */
 export function standardDeviation(arr: number[], usePopulation = false) {
-  const _mean = mean(arr)
-  return Math.sqrt(
-    arr
-      .reduce((acc: number[], val) => acc.concat((val - _mean) ** 2), [])
-      .reduce((acc, val) => acc + val, 0) /
-      (arr.length - (usePopulation ? 0 : 1))
-  );
+	const _mean = mean(arr);
+	return Math.sqrt(
+		arr
+			.reduce((acc: number[], val) => acc.concat((val - _mean) ** 2), [])
+			.reduce((acc, val) => acc + val, 0) /
+			(arr.length - (usePopulation ? 0 : 1))
+	);
 }
- 
+
 /**
  * Gets the mean of an array of numbers.
  * @param arr Array of numbers
  * @returns The mean of the given array
- * @since 1.0.1 
+ * @since 1.0.1
  */
-export function mean(arr: number[]) {return arr.reduce((acc, val) => acc + val, 0) / arr.length;}
+export function mean(arr: number[]) {
+	return arr.reduce((acc, val) => acc + val, 0) / arr.length;
+}

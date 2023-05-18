@@ -3,18 +3,20 @@ import { AvailablePlatforms, type THistoryEntry, type TRoleFormData } from '../s
 import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ cookies }) => {
-    const cachedFormData: { type: "role", data: TRoleFormData } = JSON.parse(cookies.get('cachedRoleFormData') ?? '{}');
+	const cachedFormData: { type: 'role'; data: TRoleFormData } = JSON.parse(
+		cookies.get('cachedRoleFormData') ?? '{}'
+	);
 
 	let safeCachedFormData: TRoleFormData | null = null;
-    if (cachedFormData.data) {
-        if (cachedFormData.data.tags !== null || cachedFormData.data.tags !== undefined) {
-            cachedFormData.data.tags = cachedFormData.data.tags.filter(v => v !== '') ?? [];
-        }
+	if (cachedFormData.data) {
+		if (cachedFormData.data.tags !== null || cachedFormData.data.tags !== undefined) {
+			cachedFormData.data.tags = cachedFormData.data.tags.filter((v) => v !== '') ?? [];
+		}
 		safeCachedFormData = {
 			...cachedFormData.data,
 			tags: cachedFormData.data.tags.filter((v: string) => v !== '')
-		}
-    }
+		};
+	}
 
 	return {
 		availablePlatforms: AvailablePlatforms,
@@ -25,32 +27,55 @@ export const load = (async ({ cookies }) => {
 export const actions = {
 	execute: async ({ request, cookies }) => {
 		const data = await request.formData();
-		const parsedData = Object.fromEntries(data)
+		const parsedData = Object.fromEntries(data);
 		if (parsedData.role === '') return;
 
-		cookies.set('cachedRoleFormData', JSON.stringify({type: 'role', data: {...parsedData, tags: (parsedData.tags as string)?.split(':') ?? []}}), {
-			path: '/'
-		});
+		cookies.set(
+			'cachedRoleFormData',
+			JSON.stringify({
+				type: 'role',
+				data: { ...parsedData, tags: (parsedData.tags as string)?.split(':') ?? [] }
+			}),
+			{
+				path: '/'
+			}
+		);
 
-		const cachedHistoryEntries: {data: Array<THistoryEntry>} = JSON.parse(cookies.get('cachedHistoryEntries') ?? '{"data": []}');
+		const cachedHistoryEntries: { data: Array<THistoryEntry> } = JSON.parse(
+			cookies.get('cachedHistoryEntries') ?? '{"data": []}'
+		);
 
 		const filteredCachedHistoryEntries = [
-			...cachedHistoryEntries.data.
-			filter(v => v.type === 'role')
-			.filter(v => {
-				const entryRole: TRoleFormData = v.data as TRoleFormData;
-				console.log(entryRole)
-				return (entryRole.platform != parsedData.platform)
-						&& (entryRole.role != parsedData.role)
-						&& (entryRole.tags != (parsedData.tags as string)?.split(':') ?? []);
-			}),
-			...cachedHistoryEntries.data.filter(v => v.type === 'parameter')
+			...cachedHistoryEntries.data
+				.filter((v) => v.type === 'role')
+				.filter((v) => {
+					const entryRole: TRoleFormData = v.data as TRoleFormData;
+					console.log(entryRole);
+					return (
+						entryRole.platform != parsedData.platform &&
+						entryRole.role != parsedData.role &&
+						(entryRole.tags != (parsedData.tags as string)?.split(':') ?? [])
+					);
+				}),
+			...cachedHistoryEntries.data.filter((v) => v.type === 'parameter')
 		];
 
-		cookies.set('cachedHistoryEntries', JSON.stringify({data: [...filteredCachedHistoryEntries, {type: 'role', data: {...parsedData, tags: (parsedData.tags as string)?.split(':') ?? []}}]}), {
-			path: '/'
-		});
+		cookies.set(
+			'cachedHistoryEntries',
+			JSON.stringify({
+				data: [
+					...filteredCachedHistoryEntries,
+					{
+						type: 'role',
+						data: { ...parsedData, tags: (parsedData.tags as string)?.split(':') ?? [] }
+					}
+				]
+			}),
+			{
+				path: '/'
+			}
+		);
 
-		throw redirect(301, '/query/parameters')
-	},
+		throw redirect(301, '/query/parameters');
+	}
 } satisfies Actions;

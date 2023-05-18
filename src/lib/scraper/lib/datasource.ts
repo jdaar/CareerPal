@@ -2,11 +2,11 @@
  * Datasources should really be a class
  */
 
-import type { TJobInfo } from "./platform";
+import type { TJobInfo } from './platform';
 
 export type TablesWithKey = {
-  JobInfo: Table<TJobInfo>
-}
+	JobInfo: Table<TJobInfo>;
+};
 
 /**
  * Posts a row to the table.
@@ -32,33 +32,33 @@ export type PostRowCallback<T> = (row: T) => void;
 export type GetRowsCallback<T> = (filter?: (value: T) => boolean) => Promise<T[]>;
 
 export type TMetrics = {
-  salaries?: number[],
-  std_dev?: number,
-  mean?: number,
-  technologies?: {
-    [k: string]: number
-  },
-  average_technology_count?: number
-}
+	salaries?: number[];
+	std_dev?: number;
+	mean?: number;
+	technologies?: {
+		[k: string]: number;
+	};
+	average_technology_count?: number;
+};
 
 export type GetMetricsCallback<T> = (rows: T[]) => Promise<TMetrics>;
 
 export abstract class Table<T> {
-  public abstract Created: boolean;
-  public abstract PostRow: PostRowCallback<T>;
-  public abstract GetRows: GetRowsCallback<T>;
-  public abstract GetMetrics: GetMetricsCallback<T>;
-  public abstract SetConnection: (conn: any) => void;
+	public abstract Created: boolean;
+	public abstract PostRow: PostRowCallback<T>;
+	public abstract GetRows: GetRowsCallback<T>;
+	public abstract GetMetrics: GetMetricsCallback<T>;
+	public abstract SetConnection: (conn: any) => void;
 
-  public abstract Create: () => void;
-};
+	public abstract Create: () => void;
+}
 
 export abstract class Datasource {
-  public abstract Name: string;
-  public abstract ConnectionStr: string;
-  public abstract Connected: boolean;
-  public abstract Connect: (connection_string: string) => void;
-  public abstract Disconnect: () => void;
-  public abstract EnsureCreated: () => void;
-  public abstract Tables: TablesWithKey
-};
+	public abstract Name: string;
+	public abstract ConnectionStr: string;
+	public abstract Connected: boolean;
+	public abstract Connect: (connection_string: string) => void;
+	public abstract Disconnect: () => void;
+	public abstract EnsureCreated: () => void;
+	public abstract Tables: TablesWithKey;
+}

@@ -1,32 +1,32 @@
-import type { Page } from "puppeteer";
+import type { Page } from 'puppeteer';
 
 export type TJobInfo = {
-  role_search: string;
-  title: string;
-  subtitle: string;
-  tags: string[];
-  requirements: string[];
-  company: string;
-  location: string;
-  salary: string;
-  experience: string;
-  technologies: (string | null)[];
-  url: string;
+	role_search: string;
+	title: string;
+	subtitle: string;
+	tags: string[];
+	requirements: string[];
+	company: string;
+	location: string;
+	salary: string;
+	experience: string;
+	technologies: (string | null)[];
+	url: string;
 };
 
 export type TJobScraperParameters = {
-  role: string,
-  tags: string[],
-  pages: number,
-  verbose?: boolean, 
-  connection_string: string,
-}
+	role: string;
+	tags: string[];
+	pages: number;
+	verbose?: boolean;
+	connection_string: string;
+};
 
 export type TWithPageAndParameters<T> = {
-  data: T,
-  page: Page,
-  parameters: TJobScraperParameters
-}
+	data: T;
+	page: Page;
+	parameters: TJobScraperParameters;
+};
 
 /**
  * Gets the url for a given role within a given platform.
@@ -49,7 +49,7 @@ export type GetUrlCallback = (role: string) => string;
  * @since 1.0.0
  */
 export type GetJobLinksCallback = (
-  urlWithPageAndParameters: TWithPageAndParameters<string>
+	urlWithPageAndParameters: TWithPageAndParameters<string>
 ) => Promise<string[]>;
 
 /**
@@ -65,12 +65,12 @@ export type GetJobLinksCallback = (
  * @since 1.0.0
  */
 export type GetJobInfoCallback = (
-  urlWithPageAndParameters: TWithPageAndParameters<string>
+	urlWithPageAndParameters: TWithPageAndParameters<string>
 ) => Promise<TJobInfo>;
 
 export type Platform = {
-  name: string;
-  getUrl: GetUrlCallback;
-  getJobLinks: GetJobLinksCallback;
-  getJobInfo: GetJobInfoCallback;
+	name: string;
+	getUrl: GetUrlCallback;
+	getJobLinks: GetJobLinksCallback;
+	getJobInfo: GetJobInfoCallback;
 };

@@ -1,19 +1,19 @@
-![header](./.github/images/header.png)
----
+## ![header](./.github/images/header.png)
 
 An open-source platform for job data extraction in multiple plataforms and metric generator for datasources, it includes tag detection, with fuzzy search or ai.
 
 It comes with an intuitive web ui that leets you manage all your scheduled jobs, datasources and analytics
 
 ## Features
+
 - Hot-swap datasources
 - MongoDb support
 - Computrabajo support
 - Tag detection
 - Metric generation
-    - Salary mean
-    - Salary std deviation
-    - Tag count
+  - Salary mean
+  - Salary std deviation
+  - Tag count
 
 ## How to run
 
@@ -33,9 +33,9 @@ You can see a demo of the app in the following link: [Go to demo](https://youtu.
 ## Usage
 
 1. Execute a query
-    - Click "Query parameters" on the roadmap in the navbar
-    - You will now be in the query parameters form, fill it
-    - Execute the query with the button on form submission
+   - Click "Query parameters" on the roadmap in the navbar
+   - You will now be in the query parameters form, fill it
+   - Execute the query with the button on form submission
 2. Wait for the query to recollect data, **you can see unfinished scraping jobs data**
 3. Go to analytics page and do your thing :)
 
@@ -49,7 +49,7 @@ You can see a demo of the app in the following link: [Go to demo](https://youtu.
 
 ![role_screenshot](./.github/images/role_screenshot.png)
 
-### Parameter 
+### Parameter
 
 ![parameter_screenshot](./.github/images/parameter_screenshot.png)
 
@@ -82,6 +82,3 @@ You can see a demo of the app in the following link: [Go to demo](https://youtu.
 ### Features
 
 - [ ] Scraping job stop
-
-
- 
