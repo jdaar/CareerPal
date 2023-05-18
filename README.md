@@ -1,6 +1,6 @@
 ## ![header](./.github/images/header.png)
 
-An open-source platform for job data extraction in multiple plataforms and metric generator for datasources, it includes tag detection, with fuzzy search or ai.
+An open-source platform for job data extraction in multiple plataforms and metric generator for datasources, it includes tag detection, with fuzzy search or openai api.
 
 It comes with an intuitive web ui that leets you manage all your scheduled jobs, datasources and analytics
 
@@ -10,6 +10,8 @@ It comes with an intuitive web ui that leets you manage all your scheduled jobs,
 - MongoDb support
 - Computrabajo support
 - Tag detection
+  - OpenAI api
+  - Fuzzy search
 - Metric generation
   - Salary mean
   - Salary std deviation
